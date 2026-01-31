@@ -1,5 +1,4 @@
 {
-  "$schema": "https://agentskills.io/schema/v1",
   "name": "hipaa-guardian",
   "version": "1.0.0",
   "description": "HIPAA compliance skill for PHI/PII detection, code scanning, audit reports, and remediation guidance. Detects all 18 HIPAA Safe Harbor identifiers.",

@@ -1,12 +1,22 @@
 ---
 name: hipaa-guardian
-description: This skill should be used when the user asks to "scan for PHI", "detect PII", "HIPAA compliance check", "audit for protected health information", "find sensitive healthcare data", "generate HIPAA audit report", or mentions PHI detection, HIPAA compliance, healthcare data privacy, or medical record security.
-version: 1.0.0
+description: HIPAA compliance skill for PHI/PII detection, code scanning, audit reports, and remediation. This skill should be used when the user asks to "scan for PHI", "detect PII", "HIPAA compliance check", "audit for protected health information", "find sensitive healthcare data", "generate HIPAA audit report", or mentions PHI detection, HIPAA compliance, healthcare data privacy, or medical record security.
+license: MIT
+metadata:
+  author: 1mangesh1
+  version: "1.0.0"
+  tags:
+    - hipaa
+    - phi
+    - pii
+    - healthcare
+    - compliance
+    - security
 ---
 
 # HIPAA Guardian
 
-A comprehensive PHI/PII detection and HIPAA compliance skill for Claude Code.
+Comprehensive HIPAA compliance skill for AI agents. Detects all 18 HIPAA Safe Harbor identifiers in data files and source code, provides risk scoring, maps findings to HIPAA regulations, and generates audit reports with remediation guidance.
 
 ## Capabilities
 

@@ -28,7 +28,16 @@ Works with multiple AI coding agents that support the Agent Skills standard:
 
 ## Installation
 
+### Via skills.sh (Recommended)
+
+```bash
+npx skills add 1Mangesh1/hipaa-guardian
+```
+
+This works with any compatible AI coding agent.
+
 ### Claude Code
+
 ```bash
 # Via plugin marketplace
 /plugin marketplace add 1Mangesh1/hipaa-guardian
@@ -40,12 +49,14 @@ cp -r hipaa-guardian/skills/hipaa-guardian ~/.claude/skills/
 ```
 
 ### Cursor
+
 ```bash
 git clone https://github.com/1Mangesh1/hipaa-guardian.git
 cp -r hipaa-guardian/skills/hipaa-guardian .cursor/skills/
 ```
 
 ### Other Agents
+
 Copy the `skills/hipaa-guardian` directory to your agent's skills location:
 - **Aider**: `~/.aider/skills/`
 - **Continue**: Add path to `~/.continue/config.json`
