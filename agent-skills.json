@@ -32,7 +32,7 @@
   "skills": [
     {
       "name": "hipaa-guardian",
-      "path": "./skills/hipaa-guardian",
+      "path": ".",
       "entry": "SKILL.md",
       "invocation": {
         "commands": [
@@ -88,25 +88,25 @@
       "scripts": [
         {
           "name": "detect-phi",
-          "path": "./skills/hipaa-guardian/scripts/detect-phi.py",
+          "path": "./scripts/detect-phi.py",
           "runtime": "python3",
           "description": "PHI detection script for data files"
         },
         {
           "name": "scan-code",
-          "path": "./skills/hipaa-guardian/scripts/scan-code.py",
+          "path": "./scripts/scan-code.py",
           "runtime": "python3",
           "description": "Code scanning script for PHI leakage"
         },
         {
           "name": "generate-report",
-          "path": "./skills/hipaa-guardian/scripts/generate-report.py",
+          "path": "./scripts/generate-report.py",
           "runtime": "python3",
           "description": "Audit report generation"
         },
         {
           "name": "validate-controls",
-          "path": "./skills/hipaa-guardian/scripts/validate-controls.sh",
+          "path": "./scripts/validate-controls.sh",
           "runtime": "bash",
           "description": "Security controls validation"
         }
@@ -114,31 +114,31 @@
       "references": [
         {
           "name": "hipaa-identifiers",
-          "path": "./skills/hipaa-guardian/references/hipaa-identifiers.md"
+          "path": "./references/hipaa-identifiers.md"
         },
         {
           "name": "detection-patterns",
-          "path": "./skills/hipaa-guardian/references/detection-patterns.md"
+          "path": "./references/detection-patterns.md"
         },
         {
           "name": "code-scanning",
-          "path": "./skills/hipaa-guardian/references/code-scanning.md"
+          "path": "./references/code-scanning.md"
         },
         {
           "name": "privacy-rule",
-          "path": "./skills/hipaa-guardian/references/privacy-rule.md"
+          "path": "./references/privacy-rule.md"
         },
         {
           "name": "security-rule",
-          "path": "./skills/hipaa-guardian/references/security-rule.md"
+          "path": "./references/security-rule.md"
         },
         {
           "name": "breach-rule",
-          "path": "./skills/hipaa-guardian/references/breach-rule.md"
+          "path": "./references/breach-rule.md"
         },
         {
           "name": "risk-scoring",
-          "path": "./skills/hipaa-guardian/references/risk-scoring.md"
+          "path": "./references/risk-scoring.md"
         }
       ]
     }
