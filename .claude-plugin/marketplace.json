@@ -1,0 +1,13 @@
+{
+  "name": "hipaa-guardian-marketplace",
+  "owner": {
+    "name": "1mangesh1"
+  },
+  "plugins": [
+    {
+      "name": "hipaa-guardian",
+      "source": "./skills/hipaa-guardian",
+      "description": "HIPAA compliance skill for PHI/PII detection, code scanning, audit reports, and remediation guidance. Detects all 18 HIPAA Safe Harbor identifiers."
+    }
+  ]
+}
