@@ -1,19 +1,13 @@
 {
   "name": "hipaa-guardian-marketplace",
-  "version": "1.0.0",
   "owner": {
-    "name": "1mangesh1",
-    "url": "https://github.com/1Mangesh1"
+    "name": "1mangesh1"
   },
-  "description": "HIPAA compliance skills for AI coding agents",
   "plugins": [
     {
       "name": "hipaa-guardian",
       "source": "./skills/hipaa-guardian",
-      "description": "HIPAA compliance skill for PHI/PII detection, code scanning, audit reports, and remediation guidance. Detects all 18 HIPAA Safe Harbor identifiers.",
-      "version": "1.0.0",
-      "keywords": ["hipaa", "phi", "pii", "healthcare", "compliance", "security"],
-      "compatibility": ["claude-code", "cursor", "windsurf", "aider", "continue", "cline"]
+      "description": "HIPAA compliance skill for PHI/PII detection, code scanning, audit reports, and remediation guidance. Detects all 18 HIPAA Safe Harbor identifiers."
     }
   ]
 }
