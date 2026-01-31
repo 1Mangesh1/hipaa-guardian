@@ -30,11 +30,42 @@ Works with multiple AI coding agents that support the Agent Skills standard:
 
 ### Via skills.sh (Recommended)
 
+Works with 40+ AI coding agents including Claude Code, Cursor, Windsurf, Aider, Continue, Cline, and more.
+
 ```bash
 npx skills add 1Mangesh1/hipaa-guardian
 ```
 
-This works with any compatible AI coding agent.
+**Installation flow:**
+
+```
+███████╗██╗  ██╗██╗██╗     ██╗     ███████╗
+██╔════╝██║ ██╔╝██║██║     ██║     ██╔════╝
+███████╗█████╔╝ ██║██║     ██║     ███████╗
+╚════██║██╔═██╗ ██║██║     ██║     ╚════██║
+███████║██║  ██╗██║███████╗███████╗███████║
+╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝
+
+┌   skills
+│
+◇  Source: https://github.com/1Mangesh1/hipaa-guardian.git
+│
+◇  Repository cloned
+│
+◇  Found 1 skill
+│
+●  Skill: hipaa-guardian
+│
+◇  Select agents to install to (40+ available)
+│
+◇  Installation method: Symlink (Recommended)
+│
+◇  Installation complete
+│
+└  Done!
+```
+
+The skill will be installed to your project's `.agents/skills/hipaa-guardian` directory.
 
 ### Claude Code
 
@@ -51,13 +82,22 @@ cp -r hipaa-guardian/skills/hipaa-guardian ~/.claude/skills/
 ### Cursor
 
 ```bash
+npx skills add 1Mangesh1/hipaa-guardian
+# Select "Cursor" when prompted for agent
+
+# Or manual install
 git clone https://github.com/1Mangesh1/hipaa-guardian.git
 cp -r hipaa-guardian/skills/hipaa-guardian .cursor/skills/
 ```
 
 ### Other Agents
 
-Copy the `skills/hipaa-guardian` directory to your agent's skills location:
+```bash
+npx skills add 1Mangesh1/hipaa-guardian
+# Select your agent when prompted
+```
+
+Or manually copy the skill to your agent's skills location:
 - **Aider**: `~/.aider/skills/`
 - **Continue**: Add path to `~/.continue/config.json`
 - **Cline**: Add to workspace `.cline/skills/`
