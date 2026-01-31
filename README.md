@@ -1,6 +1,19 @@
 # HIPAA Guardian
 
-A comprehensive Claude Code skill for detecting Protected Health Information (PHI) and Personally Identifiable Information (PII), mapping findings to HIPAA regulations, generating audit reports, and providing remediation guidance.
+A comprehensive AI agent skill for detecting Protected Health Information (PHI) and Personally Identifiable Information (PII), mapping findings to HIPAA regulations, generating audit reports, and providing remediation guidance.
+
+## Compatibility
+
+Works with multiple AI coding agents that support the Agent Skills standard:
+
+| Agent | Status | Install Method |
+|-------|--------|----------------|
+| Claude Code | Supported | `/plugin install` or manual |
+| Cursor | Supported | Add to `.cursor/skills/` |
+| Windsurf | Supported | Add to workspace skills |
+| Aider | Supported | Add to `.aider/skills/` |
+| Continue | Supported | Add to config |
+| Cline | Supported | Add to workspace |
 
 ## Features
 
@@ -15,7 +28,29 @@ A comprehensive Claude Code skill for detecting Protected Health Information (PH
 
 ## Installation
 
-The skill is installed at `~/.claude/skills/hipaa-guardian/`
+### Claude Code
+```bash
+# Via plugin marketplace
+/plugin marketplace add 1Mangesh1/hipaa-guardian
+/plugin install hipaa-guardian@hipaa-guardian-marketplace
+
+# Or manual install
+git clone https://github.com/1Mangesh1/hipaa-guardian.git
+cp -r hipaa-guardian/skills/hipaa-guardian ~/.claude/skills/
+```
+
+### Cursor
+```bash
+git clone https://github.com/1Mangesh1/hipaa-guardian.git
+cp -r hipaa-guardian/skills/hipaa-guardian .cursor/skills/
+```
+
+### Other Agents
+Copy the `skills/hipaa-guardian` directory to your agent's skills location:
+- **Aider**: `~/.aider/skills/`
+- **Continue**: Add path to `~/.continue/config.json`
+- **Cline**: Add to workspace `.cline/skills/`
+- **Windsurf**: Add to workspace skills directory
 
 ## Usage
 

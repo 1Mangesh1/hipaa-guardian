@@ -1,0 +1,180 @@
+{
+  "$schema": "https://agentskills.io/schema/v1",
+  "name": "hipaa-guardian",
+  "version": "1.0.0",
+  "description": "HIPAA compliance skill for PHI/PII detection, code scanning, audit reports, and remediation guidance. Detects all 18 HIPAA Safe Harbor identifiers.",
+  "author": {
+    "name": "1mangesh1",
+    "url": "https://github.com/1Mangesh1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1Mangesh1/hipaa-guardian"
+  },
+  "license": "MIT",
+  "keywords": [
+    "hipaa",
+    "phi",
+    "pii",
+    "healthcare",
+    "compliance",
+    "security",
+    "audit",
+    "detection",
+    "privacy",
+    "protected-health-information"
+  ],
+  "categories": [
+    "security",
+    "compliance",
+    "healthcare",
+    "data-privacy"
+  ],
+  "skills": [
+    {
+      "name": "hipaa-guardian",
+      "path": "./skills/hipaa-guardian",
+      "entry": "SKILL.md",
+      "invocation": {
+        "commands": [
+          "/hipaa-guardian",
+          "/hipaa",
+          "/phi-scan"
+        ],
+        "triggers": [
+          "scan for PHI",
+          "detect PII",
+          "HIPAA compliance check",
+          "audit for protected health information",
+          "find sensitive healthcare data",
+          "generate HIPAA audit report",
+          "check PHI exposure",
+          "healthcare data privacy"
+        ]
+      },
+      "capabilities": [
+        {
+          "name": "phi-detection",
+          "description": "Detect all 18 HIPAA Safe Harbor identifiers in data files"
+        },
+        {
+          "name": "code-scanning",
+          "description": "Scan source code for PHI leakage in strings, comments, fixtures"
+        },
+        {
+          "name": "risk-scoring",
+          "description": "Score findings 0-100 based on sensitivity, exposure, volume"
+        },
+        {
+          "name": "hipaa-mapping",
+          "description": "Map findings to Privacy Rule, Security Rule, Breach Rule sections"
+        },
+        {
+          "name": "audit-reports",
+          "description": "Generate compliance reports with executive summaries"
+        },
+        {
+          "name": "remediation",
+          "description": "Provide step-by-step remediation playbooks"
+        },
+        {
+          "name": "control-validation",
+          "description": "Check security controls like gitignore, pre-commit hooks"
+        }
+      ],
+      "tools": {
+        "required": ["read", "glob", "grep"],
+        "optional": ["bash", "write"]
+      },
+      "scripts": [
+        {
+          "name": "detect-phi",
+          "path": "./skills/hipaa-guardian/scripts/detect-phi.py",
+          "runtime": "python3",
+          "description": "PHI detection script for data files"
+        },
+        {
+          "name": "scan-code",
+          "path": "./skills/hipaa-guardian/scripts/scan-code.py",
+          "runtime": "python3",
+          "description": "Code scanning script for PHI leakage"
+        },
+        {
+          "name": "generate-report",
+          "path": "./skills/hipaa-guardian/scripts/generate-report.py",
+          "runtime": "python3",
+          "description": "Audit report generation"
+        },
+        {
+          "name": "validate-controls",
+          "path": "./skills/hipaa-guardian/scripts/validate-controls.sh",
+          "runtime": "bash",
+          "description": "Security controls validation"
+        }
+      ],
+      "references": [
+        {
+          "name": "hipaa-identifiers",
+          "path": "./skills/hipaa-guardian/references/hipaa-identifiers.md"
+        },
+        {
+          "name": "detection-patterns",
+          "path": "./skills/hipaa-guardian/references/detection-patterns.md"
+        },
+        {
+          "name": "code-scanning",
+          "path": "./skills/hipaa-guardian/references/code-scanning.md"
+        },
+        {
+          "name": "privacy-rule",
+          "path": "./skills/hipaa-guardian/references/privacy-rule.md"
+        },
+        {
+          "name": "security-rule",
+          "path": "./skills/hipaa-guardian/references/security-rule.md"
+        },
+        {
+          "name": "breach-rule",
+          "path": "./skills/hipaa-guardian/references/breach-rule.md"
+        },
+        {
+          "name": "risk-scoring",
+          "path": "./skills/hipaa-guardian/references/risk-scoring.md"
+        }
+      ]
+    }
+  ],
+  "compatibility": {
+    "agents": [
+      {
+        "name": "claude-code",
+        "minVersion": "1.0.0"
+      },
+      {
+        "name": "cursor",
+        "minVersion": "0.40.0"
+      },
+      {
+        "name": "windsurf",
+        "minVersion": "1.0.0"
+      },
+      {
+        "name": "aider",
+        "minVersion": "0.50.0"
+      },
+      {
+        "name": "continue",
+        "minVersion": "0.8.0"
+      },
+      {
+        "name": "cline",
+        "minVersion": "2.0.0"
+      }
+    ],
+    "platforms": ["macos", "linux", "windows"],
+    "languages": ["python", "javascript", "typescript", "java", "go", "ruby", "csharp", "sql"]
+  },
+  "requirements": {
+    "python": ">=3.8"
+  }
+}
