@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "organization": "1mangesh1",
-  "date": "January 2026",
-  "abstract": "Comprehensive HIPAA compliance skill for AI agents. Detects all 18 HIPAA Safe Harbor identifiers (SSN, MRN, DOB, etc.) in data files and source code. Provides risk scoring (0-100), maps findings to Privacy Rule, Security Rule, and Breach Notification Rule sections, generates audit reports, and offers step-by-step remediation guidance.",
+  "date": "February 2026",
+  "abstract": "Comprehensive HIPAA compliance skill for AI agents with a strong focus on developer code security patterns. Detects all 18 HIPAA Safe Harbor identifiers (SSN, MRN, DOB, etc.) in data files and source code. Provides risk scoring (0-100), maps findings to Privacy Rule, Security Rule, and Breach Notification Rule sections, generates audit reports, and offers step-by-step remediation guidance. Includes authentication gate detection, PHI logging safety audit, API response masking, and frontend PHI protection checks.",
   "references": [
     "https://www.hhs.gov/hipaa/for-professionals/privacy/laws-regulations/",
     "https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/",

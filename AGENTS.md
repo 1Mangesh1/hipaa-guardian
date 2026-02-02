@@ -1,8 +1,8 @@
 # HIPAA Guardian
 
-**Version 1.0.0**
+**Version 1.1.0**
 1mangesh1
-January 2026
+February 2026
 
 > **Note:**
 > This document is for AI agents and LLMs to follow when scanning for PHI/PII,
@@ -13,7 +13,13 @@ January 2026
 
 ## Abstract
 
-Comprehensive HIPAA compliance skill for AI agents. Detects all 18 HIPAA Safe Harbor identifiers (SSN, MRN, DOB, phone, email, address, etc.) in data files and source code. Provides risk scoring (0-100), maps findings to Privacy Rule, Security Rule, and Breach Notification Rule sections, generates audit reports, and offers step-by-step remediation guidance.
+Comprehensive HIPAA compliance skill for AI agents with a strong focus on developer code security patterns. Detects all 18 HIPAA Safe Harbor identifiers (SSN, MRN, DOB, phone, email, address, etc.) in data files and source code. Provides risk scoring (0-100), maps findings to Privacy Rule, Security Rule, and Breach Notification Rule sections, generates audit reports, and offers step-by-step remediation guidance.
+
+**Developer-Focused Capabilities:**
+- Auth Gate Detection: Find API endpoints exposing PHI without authentication
+- Log Safety Audit: Detect PHI leaking into log statements
+- API Response Checks: Identify unmasked PHI in API responses
+- Frontend PHI Protection: Detect client-side PHI storage vulnerabilities
 
 ---
 
@@ -23,10 +29,11 @@ Comprehensive HIPAA compliance skill for AI agents. Detects all 18 HIPAA Safe Ha
 2. [Detection Workflow](#2-detection-workflow)
 3. [The 18 HIPAA Identifiers](#3-the-18-hipaa-identifiers)
 4. [Code Scanning Rules](#4-code-scanning-rules)
-5. [Risk Scoring](#5-risk-scoring)
-6. [HIPAA Rule Mapping](#6-hipaa-rule-mapping)
-7. [Output Formats](#7-output-formats)
-8. [Security Guardrails](#8-security-guardrails)
+5. [Developer Code Compliance](#5-developer-code-compliance)
+6. [Risk Scoring](#6-risk-scoring)
+7. [HIPAA Rule Mapping](#7-hipaa-rule-mapping)
+8. [Output Formats](#8-output-formats)
+9. [Security Guardrails](#9-security-guardrails)
 
 ---
 
@@ -39,6 +46,11 @@ Activate this skill when the user:
 - Asks to "check for protected health information"
 - Mentions "medical record security" or "patient data privacy"
 - Wants to scan code for "hardcoded PHI" or "test data leakage"
+- Asks to "check authentication on PHI endpoints"
+- Wants to "scan logs for PHI" or "check logging safety"
+- Mentions "API response masking" or "field-level authorization"
+- Asks about "PHI in error messages" or "client-side PHI storage"
+- Wants to review code for "authentication gates" or "audit logging"
 
 ---
 
@@ -187,7 +199,96 @@ Full patterns: `references/code-scanning.md`
 
 ---
 
-## 5. Risk Scoring
+## 5. Developer Code Compliance
+
+### 5.1 Authentication Gates
+
+**CRITICAL:** Any code exposing PHI MUST have authentication before access.
+
+**Detection Patterns:**
+```regex
+# Python - Unprotected routes
+@app\.route\([^)]*patient[^)]*\)(?!.*@require_auth)
+
+# JavaScript - Missing middleware
+(app|router)\.(get|post)\s*\([^)]*patient[^)]*,\s*(?!.*authenticate)
+
+# Java - Missing @PreAuthorize
+@(GetMapping|PostMapping)\([^)]*patient[^)]*\)(?!\s*@PreAuthorize)
+```
+
+**Compliant Pattern:**
+```python
+@app.route('/api/patient/<patient_id>')
+@require_auth                        # Authentication required
+@require_role(['doctor', 'nurse'])   # Role-based access
+@audit_log('patient_access')         # Audit trail
+def get_patient(patient_id):
+    # Safe to access
+    pass
+```
+
+Full patterns: `references/auth-patterns.md`
+
+### 5.2 PHI in Logging
+
+**Detection Patterns:**
+```regex
+# Python logging with PHI
+(logger|logging)\.(info|debug|error).*patient\.(ssn|name|dob)
+print\(.*patient\.
+
+# JavaScript
+console\.(log|error).*patient
+```
+
+**Compliant Pattern:**
+```python
+# Use IDs only, never PHI values
+logger.info(f"Processing patient_id={patient.id}")
+
+# Apply PHI filter
+logging.getLogger().addFilter(PHIRedactionFilter())
+```
+
+Full patterns: `references/logging-safety.md`
+
+### 5.3 API Response Masking
+
+**Detection Patterns:**
+```regex
+# Returning full objects
+return\s+jsonify\s*\(\s*patient\s*\)
+res\.json\s*\(\s*patient\s*\)
+SELECT\s+\*\s+FROM\s+patient
+```
+
+**Compliant Pattern:**
+```python
+# Filter based on role
+filtered = PatientResponseFilter.filter_response(
+    patient_data,
+    user_role=Role(user.role),
+)
+return jsonify(filtered)
+```
+
+Full patterns: `references/api-security.md`
+
+### 5.4 Code Scanning Checklist
+
+| Check | Detection Target | Severity |
+|-------|-----------------|----------|
+| Missing Auth Gates | API endpoints without @require_auth | Critical |
+| PHI in Logs | logger.* with patient.ssn, dob, name | High |
+| Unmasked API Response | res.json(patient), jsonify(patient) | High |
+| PHI in Error Messages | raise.*{ssn, throw.*patient | High |
+| Client-Side PHI Storage | localStorage.setItem.*patient | High |
+| Missing Audit Logging | PHI access without audit.log | Medium |
+
+---
+
+## 6. Risk Scoring
 
 ### Severity Levels
 
@@ -210,7 +311,7 @@ Full methodology: `references/risk-scoring.md`
 
 ---
 
-## 6. HIPAA Rule Mapping
+## 7. HIPAA Rule Mapping
 
 ### Privacy Rule (45 CFR 164.500-534)
 
@@ -238,7 +339,7 @@ Full methodology: `references/risk-scoring.md`
 
 ---
 
-## 7. Output Formats
+## 8. Output Formats
 
 ### Finding Object
 
@@ -269,7 +370,7 @@ Full methodology: `references/risk-scoring.md`
 
 ---
 
-## 8. Security Guardrails
+## 9. Security Guardrails
 
 **CRITICAL - Always follow these rules:**
 
@@ -291,3 +392,6 @@ Full methodology: `references/risk-scoring.md`
 - `references/security-rule.md` - Security Rule mapping
 - `references/breach-rule.md` - Breach Notification mapping
 - `references/risk-scoring.md` - Scoring methodology
+- `references/auth-patterns.md` - Authentication gate patterns for PHI endpoints
+- `references/logging-safety.md` - PHI-safe logging patterns and filters
+- `references/api-security.md` - API response masking and field-level auth
