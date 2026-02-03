@@ -1,13 +1,27 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "organization": "1mangesh1",
   "date": "February 2026",
-  "abstract": "Comprehensive HIPAA compliance skill for AI agents with a strong focus on developer code security patterns. Detects all 18 HIPAA Safe Harbor identifiers (SSN, MRN, DOB, etc.) in data files and source code. Provides risk scoring (0-100), maps findings to Privacy Rule, Security Rule, and Breach Notification Rule sections, generates audit reports, and offers step-by-step remediation guidance. Includes authentication gate detection, PHI logging safety audit, API response masking, and frontend PHI protection checks.",
+  "abstract": "Comprehensive HIPAA compliance skill for AI agents with developer code security patterns and healthcare data format support. Detects all 18 HIPAA Safe Harbor identifiers in data files, source code, FHIR resources, HL7 messages, and CDA documents. Features include: PHI detection in data/code, authentication gate scanning, log safety audits, API response exposure checks, risk scoring (0-100), HIPAA rule mapping, audit report generation, remediation guidance, and CI/CD integration via pre-commit hooks.",
+  "features": [
+    "PHI/PII Detection (18 HIPAA Safe Harbor identifiers)",
+    "Healthcare Format Support (FHIR R4, HL7 v2.x, CDA/C-CDA)",
+    "Code Scanning (Python, JavaScript, TypeScript, Java, Go, C#)",
+    "Authentication Gate Detection",
+    "Log Safety Audit",
+    "API Response PHI Exposure Check",
+    "Risk Scoring (0-100)",
+    "HIPAA Rule Mapping",
+    "Pre-commit Hook for CI/CD",
+    "Genetic/Genomic Data Detection"
+  ],
   "references": [
     "https://www.hhs.gov/hipaa/for-professionals/privacy/laws-regulations/",
     "https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/",
     "https://www.hhs.gov/hipaa/for-professionals/breach-notification/",
     "https://www.hhs.gov/hipaa/for-professionals/privacy/special-topics/de-identification/",
-    "https://csrc.nist.gov/publications/detail/sp/800-66/rev-2/final"
+    "https://csrc.nist.gov/publications/detail/sp/800-66/rev-2/final",
+    "https://hl7.org/fhir/",
+    "https://www.hl7.org/implement/standards/product_brief.cfm?product_id=185"
   ]
 }

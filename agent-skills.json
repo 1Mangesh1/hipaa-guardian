@@ -1,7 +1,7 @@
 {
   "name": "hipaa-guardian",
-  "version": "1.1.0",
-  "description": "HIPAA compliance skill for PHI/PII detection, code scanning, audit reports, and remediation guidance. Detects all 18 HIPAA Safe Harbor identifiers.",
+  "version": "1.2.0",
+  "description": "HIPAA compliance skill for PHI/PII detection, code scanning, healthcare format support (FHIR/HL7/CDA), auth gate detection, log safety audits, and CI/CD integration. Detects all 18 HIPAA Safe Harbor identifiers.",
   "author": {
     "name": "1mangesh1",
     "url": "https://github.com/1Mangesh1"
@@ -21,7 +21,13 @@
     "audit",
     "detection",
     "privacy",
-    "protected-health-information"
+    "protected-health-information",
+    "fhir",
+    "hl7",
+    "cda",
+    "pre-commit",
+    "authentication",
+    "logging"
   ],
   "categories": [
     "security",
@@ -48,7 +54,12 @@
           "find sensitive healthcare data",
           "generate HIPAA audit report",
           "check PHI exposure",
-          "healthcare data privacy"
+          "healthcare data privacy",
+          "scan FHIR resources",
+          "check HL7 messages",
+          "scan logs for PHI",
+          "check authentication on PHI endpoints",
+          "API response PHI check"
         ]
       },
       "capabilities": [
@@ -59,6 +70,22 @@
         {
           "name": "code-scanning",
           "description": "Scan source code for PHI leakage in strings, comments, fixtures"
+        },
+        {
+          "name": "healthcare-formats",
+          "description": "Detect PHI in FHIR R4, HL7 v2.x, CDA/C-CDA, and X12 EDI formats"
+        },
+        {
+          "name": "auth-gate-detection",
+          "description": "Find API endpoints exposing PHI without authentication"
+        },
+        {
+          "name": "log-safety-audit",
+          "description": "Detect PHI leaking into logging statements"
+        },
+        {
+          "name": "api-response-check",
+          "description": "Find unmasked PHI exposure in API responses"
         },
         {
           "name": "risk-scoring",
@@ -79,6 +106,10 @@
         {
           "name": "control-validation",
           "description": "Check security controls like gitignore, pre-commit hooks"
+        },
+        {
+          "name": "ci-cd-integration",
+          "description": "Pre-commit hooks and GitHub Actions for automated scanning"
         }
       ],
       "tools": {
@@ -90,13 +121,31 @@
           "name": "detect-phi",
           "path": "./scripts/detect-phi.py",
           "runtime": "python3",
-          "description": "PHI detection script for data files"
+          "description": "PHI detection for data files (supports FHIR, HL7, CDA)"
         },
         {
           "name": "scan-code",
           "path": "./scripts/scan-code.py",
           "runtime": "python3",
-          "description": "Code scanning script for PHI leakage"
+          "description": "Code scanning for PHI leakage"
+        },
+        {
+          "name": "scan-auth",
+          "path": "./scripts/scan-auth.py",
+          "runtime": "python3",
+          "description": "Authentication gate detection for PHI endpoints"
+        },
+        {
+          "name": "scan-logs",
+          "path": "./scripts/scan-logs.py",
+          "runtime": "python3",
+          "description": "PHI detection in logging statements"
+        },
+        {
+          "name": "scan-response",
+          "path": "./scripts/scan-response.py",
+          "runtime": "python3",
+          "description": "API response PHI exposure detection"
         },
         {
           "name": "generate-report",
@@ -109,6 +158,12 @@
           "path": "./scripts/validate-controls.sh",
           "runtime": "bash",
           "description": "Security controls validation"
+        },
+        {
+          "name": "pre-commit-hook",
+          "path": "./scripts/pre-commit-hook.sh",
+          "runtime": "bash",
+          "description": "Git pre-commit hook for CI/CD integration"
         }
       ],
       "references": [
@@ -123,6 +178,22 @@
         {
           "name": "code-scanning",
           "path": "./references/code-scanning.md"
+        },
+        {
+          "name": "healthcare-formats",
+          "path": "./references/healthcare-formats.md"
+        },
+        {
+          "name": "auth-patterns",
+          "path": "./references/auth-patterns.md"
+        },
+        {
+          "name": "logging-safety",
+          "path": "./references/logging-safety.md"
+        },
+        {
+          "name": "api-security",
+          "path": "./references/api-security.md"
         },
         {
           "name": "privacy-rule",
