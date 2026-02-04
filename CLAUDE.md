@@ -17,14 +17,16 @@ dev-skills/
 ├── .claude-plugin/
 │   └── marketplace.json         # Claude Code plugin config
 └── skills/
-    └── hipaa-guardian/          # HIPAA compliance skill
-        ├── SKILL.md             # Entry point
-        ├── README.md            # Documentation
-        ├── AGENTS.md            # Agent guidance (skill-level)
-        ├── agent-skills.json    # Manifest
-        ├── scripts/             # Executables
-        ├── references/          # Knowledge base
-        └── examples/            # Sample outputs
+    ├── hipaa-guardian/          # HIPAA compliance skill
+    │   ├── SKILL.md
+    │   ├── scripts/
+    │   ├── references/
+    │   └── examples/
+    └── secret-scanner/          # Secret detection skill
+        ├── SKILL.md
+        ├── scripts/
+        ├── references/
+        └── examples/
 ```
 
 ## Available Skills
@@ -57,6 +59,34 @@ python skills/hipaa-guardian/scripts/scan-response.py <path>
 - `skills/hipaa-guardian/AGENTS.md` - Detailed agent instructions
 - `skills/hipaa-guardian/references/` - Detection patterns, HIPAA rules
 
+---
+
+### secret-scanner (v1.0.0)
+
+Comprehensive secret detection skill. Detects API keys, tokens, passwords, and credentials across 50+ providers.
+
+**Commands:**
+```bash
+/secret-scanner scan <path>           # Scan for secrets
+/secret-scanner scan-git <path>       # Scan git history
+/secret-scanner audit <path>          # Full security audit
+/secret-scanner verify "sk_live_xxx"  # Check specific string
+```
+
+**Scripts:**
+```bash
+python skills/secret-scanner/scripts/detect-secrets.py <path>
+python skills/secret-scanner/scripts/scan-git-history.py <path>
+```
+
+**Key Files:**
+- `skills/secret-scanner/SKILL.md` - Primary entry point
+- `skills/secret-scanner/AGENTS.md` - Detailed agent instructions
+- `skills/secret-scanner/references/secret-patterns.md` - Detection patterns
+- `skills/secret-scanner/references/remediation.md` - Rotation guides
+
+---
+
 ## Installation
 
 ```bash
@@ -65,6 +95,7 @@ npx skills add 1Mangesh1/dev-skills
 
 # Install specific skill
 npx skills add 1Mangesh1/dev-skills --skill hipaa-guardian
+npx skills add 1Mangesh1/dev-skills --skill secret-scanner
 ```
 
 ## Adding New Skills
@@ -115,8 +146,11 @@ All skills must follow these practices:
 npx skills add . --list
 
 # Verify structure
-tree -L 3 skills/
+ls -la skills/
 
-# Run hipaa-guardian tests
-python skills/hipaa-guardian/scripts/detect-phi.py examples/
+# Run hipaa-guardian
+python skills/hipaa-guardian/scripts/detect-phi.py <path>
+
+# Run secret-scanner
+python skills/secret-scanner/scripts/detect-secrets.py <path>
 ```

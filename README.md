@@ -16,6 +16,7 @@ npx skills add 1Mangesh1/dev-skills
 
 ```bash
 npx skills add 1Mangesh1/dev-skills --skill hipaa-guardian
+npx skills add 1Mangesh1/dev-skills --skill secret-scanner
 ```
 
 ## Available Skills
@@ -23,6 +24,7 @@ npx skills add 1Mangesh1/dev-skills --skill hipaa-guardian
 | Skill | Description | Version |
 |-------|-------------|---------|
 | [hipaa-guardian](./skills/hipaa-guardian/) | HIPAA compliance, PHI/PII detection, healthcare format support | 1.2.0 |
+| [secret-scanner](./skills/secret-scanner/) | Secret detection, API keys, tokens, credentials (50+ providers) | 1.0.0 |
 
 ## Skills Overview
 
@@ -40,7 +42,6 @@ Comprehensive HIPAA compliance skill for AI agents with developer code security 
 - Risk Scoring (0-100)
 - HIPAA Rule Mapping
 - Pre-commit Hook for CI/CD
-- Genetic/Genomic Data Detection
 
 **Usage:**
 ```bash
@@ -52,6 +53,34 @@ Comprehensive HIPAA compliance skill for AI agents with developer code security 
 ```
 
 [View full documentation](./skills/hipaa-guardian/README.md)
+
+---
+
+### secret-scanner
+
+Comprehensive secret detection skill for AI agents. Detects API keys, tokens, passwords, and credentials across 50+ providers.
+
+**Features:**
+- Pattern Detection (200+ regex patterns for known secret formats)
+- Entropy Analysis (detect high-entropy strings)
+- 50+ Providers (AWS, GCP, Azure, GitHub, Stripe, Slack, OpenAI, etc.)
+- Git History Scanning (find secrets in commit history)
+- Risk Scoring (0-100 severity-based)
+- Pre-commit Hook for CI/CD
+- SARIF Output (GitHub Security integration)
+- Remediation Guidance (rotation instructions)
+
+**Usage:**
+```bash
+/secret-scanner scan <path>           # Scan for secrets
+/secret-scanner scan-git <path>       # Scan git history
+/secret-scanner audit <path>          # Full security audit
+/secret-scanner verify "sk_live_xxx"  # Check specific string
+```
+
+[View full documentation](./skills/secret-scanner/README.md)
+
+---
 
 ## Compatibility
 
@@ -75,14 +104,16 @@ dev-skills/
 ├── .claude-plugin/
 │   └── marketplace.json         # Claude Code plugin config
 └── skills/
-    └── hipaa-guardian/          # Self-contained skill
-        ├── SKILL.md             # Skill definition
-        ├── README.md            # Skill documentation
-        ├── AGENTS.md            # Skill-specific agent guidance
-        ├── agent-skills.json    # Skill manifest
-        ├── scripts/             # Executable scripts
-        ├── references/          # Knowledge base
-        └── examples/            # Sample outputs
+    ├── hipaa-guardian/          # HIPAA compliance skill
+    │   ├── SKILL.md
+    │   ├── scripts/
+    │   ├── references/
+    │   └── examples/
+    └── secret-scanner/          # Secret detection skill
+        ├── SKILL.md
+        ├── scripts/
+        ├── references/
+        └── examples/
 ```
 
 ## Adding New Skills

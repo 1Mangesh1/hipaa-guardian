@@ -23,13 +23,22 @@
     "pii",
     "healthcare",
     "compliance",
-    "security"
+    "security",
+    "secrets",
+    "api-keys",
+    "credentials",
+    "tokens"
   ],
   "skills": {
     "hipaa-guardian": {
       "version": "1.2.0",
       "path": "./skills/hipaa-guardian",
       "description": "HIPAA compliance, PHI/PII detection, healthcare format support"
+    },
+    "secret-scanner": {
+      "version": "1.0.0",
+      "path": "./skills/secret-scanner",
+      "description": "Secret detection, API keys, tokens, credentials (50+ providers)"
     }
   },
   "engines": {

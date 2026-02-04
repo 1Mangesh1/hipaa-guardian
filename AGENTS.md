@@ -20,6 +20,7 @@ self-contained packages that can be installed individually or as a collection.
 | Skill | Version | Entry Point | Description |
 |-------|---------|-------------|-------------|
 | [hipaa-guardian](./skills/hipaa-guardian/) | 1.2.0 | `SKILL.md` | HIPAA compliance, PHI/PII detection, healthcare format support |
+| [secret-scanner](./skills/secret-scanner/) | 1.0.0 | `SKILL.md` | Secret detection, API keys, tokens, credentials (50+ providers) |
 
 ## Installation
 
@@ -43,6 +44,14 @@ health information", "scan logs for PHI", "check authentication on PHI endpoints
 "FHIR", "HL7", "CDA"
 
 **Agent Guide:** `skills/hipaa-guardian/AGENTS.md`
+
+### secret-scanner
+
+**Triggers:** "scan for secrets", "find API keys", "detect credentials", "check for
+hardcoded passwords", "find leaked tokens", "scan git history for secrets", "audit
+repository for credentials", "AWS keys", "GitHub tokens", "Stripe keys"
+
+**Agent Guide:** `skills/secret-scanner/AGENTS.md`
 
 ---
 
@@ -115,3 +124,4 @@ All skills in this collection follow security best practices:
 For skill-specific guidance, refer to each skill's AGENTS.md:
 
 - **hipaa-guardian**: `skills/hipaa-guardian/AGENTS.md`
+- **secret-scanner**: `skills/secret-scanner/AGENTS.md`
