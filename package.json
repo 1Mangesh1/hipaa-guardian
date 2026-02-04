@@ -1,6 +1,6 @@
 {
   "name": "@1mangesh1/dev-skills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A collection of AI agent skills for development, compliance, and security workflows",
   "author": {
     "name": "1mangesh1",
@@ -19,26 +19,72 @@
     "windsurf",
     "aider",
     "hipaa",
-    "phi",
-    "pii",
-    "healthcare",
-    "compliance",
     "security",
-    "secrets",
-    "api-keys",
-    "credentials",
-    "tokens"
+    "docker",
+    "github-cli",
+    "mcp",
+    "devtools"
   ],
   "skills": {
     "hipaa-guardian": {
       "version": "1.2.0",
       "path": "./skills/hipaa-guardian",
-      "description": "HIPAA compliance, PHI/PII detection, healthcare format support"
+      "description": "HIPAA compliance, PHI/PII detection, healthcare formats"
     },
     "secret-scanner": {
       "version": "1.0.0",
       "path": "./skills/secret-scanner",
-      "description": "Secret detection, API keys, tokens, credentials (50+ providers)"
+      "description": "Secret detection, API keys, credentials (50+ providers)"
+    },
+    "gh-cli": {
+      "version": "1.0.0",
+      "path": "./skills/gh-cli",
+      "description": "GitHub CLI for PRs, issues, releases, actions"
+    },
+    "docker-helper": {
+      "version": "1.0.0",
+      "path": "./skills/docker-helper",
+      "description": "Docker & Compose commands, debugging, optimization"
+    },
+    "git-hooks": {
+      "version": "1.0.0",
+      "path": "./skills/git-hooks",
+      "description": "Pre-commit hooks with Husky, lint-staged, pre-commit"
+    },
+    "mcp-setup": {
+      "version": "1.0.0",
+      "path": "./skills/mcp-setup",
+      "description": "MCP server configuration for Claude integration"
+    },
+    "jq-yq": {
+      "version": "1.0.0",
+      "path": "./skills/jq-yq",
+      "description": "JSON/YAML manipulation with jq and yq"
+    },
+    "curl-http": {
+      "version": "1.0.0",
+      "path": "./skills/curl-http",
+      "description": "API testing with curl and HTTPie"
+    },
+    "ssh-config": {
+      "version": "1.0.0",
+      "path": "./skills/ssh-config",
+      "description": "SSH keys, config, tunnels, jump hosts"
+    },
+    "npm-scripts": {
+      "version": "1.0.0",
+      "path": "./skills/npm-scripts",
+      "description": "npm/yarn/pnpm scripts, workspaces, publishing"
+    },
+    "makefile": {
+      "version": "1.0.0",
+      "path": "./skills/makefile",
+      "description": "GNU Make patterns for project automation"
+    },
+    "dotfiles": {
+      "version": "1.0.0",
+      "path": "./skills/dotfiles",
+      "description": "Dotfile management with stow, chezmoi"
     }
   },
   "engines": {

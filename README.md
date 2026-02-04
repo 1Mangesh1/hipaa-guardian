@@ -17,113 +17,56 @@ npx skills add 1Mangesh1/dev-skills
 ```bash
 npx skills add 1Mangesh1/dev-skills --skill hipaa-guardian
 npx skills add 1Mangesh1/dev-skills --skill secret-scanner
+npx skills add 1Mangesh1/dev-skills --skill gh-cli
 ```
 
 ## Available Skills
 
 | Skill | Description | Version |
 |-------|-------------|---------|
-| [hipaa-guardian](./skills/hipaa-guardian/) | HIPAA compliance, PHI/PII detection, healthcare format support | 1.2.0 |
-| [secret-scanner](./skills/secret-scanner/) | Secret detection, API keys, tokens, credentials (50+ providers) | 1.0.0 |
+| [hipaa-guardian](./skills/hipaa-guardian/) | HIPAA compliance, PHI/PII detection, healthcare formats | 1.2.0 |
+| [secret-scanner](./skills/secret-scanner/) | Secret detection, API keys, credentials (50+ providers) | 1.0.0 |
+| [gh-cli](./skills/gh-cli/) | GitHub CLI for PRs, issues, releases, actions | 1.0.0 |
+| [docker-helper](./skills/docker-helper/) | Docker & Compose commands, debugging, optimization | 1.0.0 |
+| [git-hooks](./skills/git-hooks/) | Pre-commit hooks with Husky, lint-staged, pre-commit | 1.0.0 |
+| [mcp-setup](./skills/mcp-setup/) | MCP server configuration for Claude integration | 1.0.0 |
+| [jq-yq](./skills/jq-yq/) | JSON/YAML manipulation with jq and yq | 1.0.0 |
+| [curl-http](./skills/curl-http/) | API testing with curl and HTTPie | 1.0.0 |
+| [ssh-config](./skills/ssh-config/) | SSH keys, config, tunnels, jump hosts | 1.0.0 |
+| [npm-scripts](./skills/npm-scripts/) | npm/yarn/pnpm scripts, workspaces, publishing | 1.0.0 |
+| [makefile](./skills/makefile/) | GNU Make patterns for project automation | 1.0.0 |
+| [dotfiles](./skills/dotfiles/) | Dotfile management with stow, chezmoi | 1.0.0 |
 
-## Skills Overview
+## Skills by Category
 
-### hipaa-guardian
+### Security & Compliance
+- **hipaa-guardian** - HIPAA compliance, PHI/PII detection
+- **secret-scanner** - API keys, tokens, credential detection
 
-Comprehensive HIPAA compliance skill for AI agents with developer code security patterns and healthcare data format support.
+### Developer Tools
+- **gh-cli** - GitHub CLI mastery
+- **docker-helper** - Container operations
+- **git-hooks** - Automated code quality
+- **mcp-setup** - MCP server integration
 
-**Features:**
-- PHI/PII Detection (18 HIPAA Safe Harbor identifiers)
-- Healthcare Format Support (FHIR R4, HL7 v2.x, CDA/C-CDA)
-- Code Scanning (Python, JavaScript, TypeScript, Java, Go, C#)
-- Authentication Gate Detection
-- Log Safety Audit
-- API Response PHI Exposure Check
-- Risk Scoring (0-100)
-- HIPAA Rule Mapping
-- Pre-commit Hook for CI/CD
-
-**Usage:**
-```bash
-/hipaa-guardian scan <path>           # Scan for PHI/PII
-/hipaa-guardian scan-code <path>      # Scan source code
-/hipaa-guardian scan-auth <path>      # Check authentication gates
-/hipaa-guardian scan-logs <path>      # Detect PHI in logs
-/hipaa-guardian audit <path>          # Full compliance audit
-```
-
-[View full documentation](./skills/hipaa-guardian/README.md)
-
----
-
-### secret-scanner
-
-Comprehensive secret detection skill for AI agents. Detects API keys, tokens, passwords, and credentials across 50+ providers.
-
-**Features:**
-- Pattern Detection (200+ regex patterns for known secret formats)
-- Entropy Analysis (detect high-entropy strings)
-- 50+ Providers (AWS, GCP, Azure, GitHub, Stripe, Slack, OpenAI, etc.)
-- Git History Scanning (find secrets in commit history)
-- Risk Scoring (0-100 severity-based)
-- Pre-commit Hook for CI/CD
-- SARIF Output (GitHub Security integration)
-- Remediation Guidance (rotation instructions)
-
-**Usage:**
-```bash
-/secret-scanner scan <path>           # Scan for secrets
-/secret-scanner scan-git <path>       # Scan git history
-/secret-scanner audit <path>          # Full security audit
-/secret-scanner verify "sk_live_xxx"  # Check specific string
-```
-
-[View full documentation](./skills/secret-scanner/README.md)
-
----
+### CLI Utilities
+- **jq-yq** - JSON/YAML processing
+- **curl-http** - HTTP request testing
+- **ssh-config** - SSH management
+- **npm-scripts** - Package management
+- **makefile** - Build automation
+- **dotfiles** - Config management
 
 ## Compatibility
 
-| Agent | Status | Install Method |
-|-------|--------|----------------|
-| Claude Code | Supported | `/plugin install` or manual |
-| Cursor | Supported | Add to `.cursor/skills/` |
-| Windsurf | Supported | Add to workspace skills |
-| Aider | Supported | Add to `.aider/skills/` |
-| Continue | Supported | Add to config |
-| Cline | Supported | Add to workspace |
-
-## Repository Structure
-
-```
-dev-skills/
-├── README.md                    # This file
-├── AGENTS.md                    # Collection-level agent guidance
-├── CLAUDE.md                    # Development instructions
-├── package.json                 # npm metadata
-├── .claude-plugin/
-│   └── marketplace.json         # Claude Code plugin config
-└── skills/
-    ├── hipaa-guardian/          # HIPAA compliance skill
-    │   ├── SKILL.md
-    │   ├── scripts/
-    │   ├── references/
-    │   └── examples/
-    └── secret-scanner/          # Secret detection skill
-        ├── SKILL.md
-        ├── scripts/
-        ├── references/
-        └── examples/
-```
-
-## Adding New Skills
-
-To add a new skill to this collection:
-
-1. Create a new directory under `skills/`
-2. Include at minimum: `SKILL.md`, `README.md`, `agent-skills.json`
-3. Update `package.json` with the new skill
-4. Update `.claude-plugin/marketplace.json`
+| Agent | Status |
+|-------|--------|
+| Claude Code | Supported |
+| Cursor | Supported |
+| Windsurf | Supported |
+| Aider | Supported |
+| Continue | Supported |
+| Cline | Supported |
 
 ## License
 
