@@ -1,6 +1,6 @@
 # HIPAA Guardian
 
-**Version 1.1.0**
+**Version 1.2.0**
 1mangesh1
 February 2026
 
@@ -20,6 +20,7 @@ Comprehensive HIPAA compliance skill for AI agents with a strong focus on develo
 - Log Safety Audit: Detect PHI leaking into log statements
 - API Response Checks: Identify unmasked PHI in API responses
 - Frontend PHI Protection: Detect client-side PHI storage vulnerabilities
+- Healthcare Format Support: FHIR R4, HL7 v2.x, CDA/C-CDA
 
 ---
 
@@ -51,6 +52,7 @@ Activate this skill when the user:
 - Mentions "API response masking" or "field-level authorization"
 - Asks about "PHI in error messages" or "client-side PHI storage"
 - Wants to review code for "authentication gates" or "audit logging"
+- Mentions "FHIR", "HL7", "CDA", or healthcare data formats
 
 ---
 
@@ -388,6 +390,7 @@ Full methodology: `references/risk-scoring.md`
 - `references/hipaa-identifiers.md` - All 18 identifiers
 - `references/detection-patterns.md` - Regex patterns
 - `references/code-scanning.md` - Code-specific rules
+- `references/healthcare-formats.md` - FHIR, HL7, CDA patterns
 - `references/privacy-rule.md` - Privacy Rule mapping
 - `references/security-rule.md` - Security Rule mapping
 - `references/breach-rule.md` - Breach Notification mapping

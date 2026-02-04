@@ -1,0 +1,38 @@
+{
+  "name": "@1mangesh1/dev-skills",
+  "version": "1.0.0",
+  "description": "A collection of AI agent skills for development, compliance, and security workflows",
+  "author": {
+    "name": "1mangesh1",
+    "url": "https://github.com/1Mangesh1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1Mangesh1/dev-skills"
+  },
+  "license": "MIT",
+  "keywords": [
+    "ai-skills",
+    "agent-skills",
+    "claude-code",
+    "cursor",
+    "windsurf",
+    "aider",
+    "hipaa",
+    "phi",
+    "pii",
+    "healthcare",
+    "compliance",
+    "security"
+  ],
+  "skills": {
+    "hipaa-guardian": {
+      "version": "1.2.0",
+      "path": "./skills/hipaa-guardian",
+      "description": "HIPAA compliance, PHI/PII detection, healthcare format support"
+    }
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

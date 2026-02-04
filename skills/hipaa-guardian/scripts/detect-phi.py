@@ -171,6 +171,62 @@ PATTERNS = {
         'sensitivity': 95,
         'classification': 'PHI',
     },
+    'fhir_patient': {
+        'name': 'FHIR Patient Resource',
+        'patterns': [
+            (r'"resourceType"\s*:\s*"Patient"', 'fhir_patient'),
+            (r'"resourceType"\s*:\s*"(Condition|Observation|MedicationRequest|DiagnosticReport)"', 'fhir_clinical'),
+        ],
+        'sensitivity': 95,
+        'classification': 'PHI',
+    },
+    'fhir_identifier': {
+        'name': 'FHIR Patient Identifier',
+        'patterns': [
+            (r'"identifier"\s*:\s*\[\s*\{[^}]*"system"\s*:\s*"[^"]*(?:ssn|mrn|patient)[^"]*"', 'fhir_id'),
+            (r'"birthDate"\s*:\s*"\d{4}-\d{2}-\d{2}"', 'fhir_dob'),
+        ],
+        'sensitivity': 90,
+        'classification': 'PHI',
+    },
+    'hl7_segment': {
+        'name': 'HL7 Message Segment',
+        'patterns': [
+            (r'^MSH\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|(ADT|ORU|ORM)', 'hl7_header'),
+            (r'^PID\|', 'hl7_patient'),
+            (r'^DG1\|', 'hl7_diagnosis'),
+            (r'^OBX\|', 'hl7_observation'),
+        ],
+        'sensitivity': 95,
+        'classification': 'PHI',
+    },
+    'hl7_ssn': {
+        'name': 'HL7 SSN Field',
+        'patterns': [
+            (r'^PID\|(?:[^|]*\|){18}(\d{3}-\d{2}-\d{4})', 'hl7_pid_ssn'),
+        ],
+        'sensitivity': 100,
+        'classification': 'PHI',
+    },
+    'cda_document': {
+        'name': 'CDA Clinical Document',
+        'patterns': [
+            (r'<ClinicalDocument[^>]*xmlns="urn:hl7-org:v3"', 'cda_root'),
+            (r'<patientRole>', 'cda_patient'),
+        ],
+        'sensitivity': 95,
+        'classification': 'PHI',
+    },
+    'genetic_data': {
+        'name': 'Genetic/Genomic Data',
+        'patterns': [
+            (r'\b[ACGT]{50,}\b', 'dna_sequence'),
+            (r'(?i)\b(DNA|Genetic|Genomic)\s*(ID|Sample|Sequence|Marker|Test)\b', 'genetic_label'),
+            (r'(?i)\brs\d{5,}\b', 'snp_id'),
+        ],
+        'sensitivity': 100,
+        'classification': 'PHI',
+    },
 }
 
 # Exclusion patterns to reduce false positives
