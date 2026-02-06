@@ -1,0 +1,39 @@
+{
+  "name": "healthcare-audit-logger",
+  "version": "1.0.0",
+  "description": "HIPAA audit logging skill for generating immutable audit trails, tracking PHI access, monitoring authentication events, and ensuring §164.312(b) compliance. Supports 6+ year retention, structured logging, and compliance reporting.",
+  "author": {
+    "name": "1mangesh1",
+    "url": "https://github.com/1Mangesh1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1Mangesh1/hipaa-guardian"
+  },
+  "license": "MIT",
+  "keywords": [
+    "hipaa",
+    "audit-logging",
+    "compliance",
+    "healthcare",
+    "security",
+    "phi-tracking",
+    "access-control",
+    "authentication",
+    "ehr",
+    "logging",
+    "§164.312(b)",
+    "immutable-logs"
+  ],
+  "agents": [
+    "claude",
+    "cursor",
+    "windsurf",
+    "aider"
+  ],
+  "compliance": {
+    "hipaa": true,
+    "nist_csf": "2.0",
+    "regulation": "45 CFR §164.312(b)"
+  }
+}

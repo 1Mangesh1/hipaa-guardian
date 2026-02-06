@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "organization": "1mangesh1",
+  "date": "February 2026",
+  "abstract": "Healthcare data format validation skill for FHIR and HL7 compliance. Validates FHIR R5 resources, HL7 v2 messages, and CDA clinical documents. Features include: schema validation, reference resolution, terminology checking (SNOMED CT, LOINC, ICD-10), cardinality verification, interoperability analysis, and detailed error reporting with remediation guidance.",
+  "features": [
+    "FHIR R5 Resource Validation",
+    "HL7 v2.x Message Parsing",
+    "CDA R2 Document Validation",
+    "Schema Compliance Checking",
+    "FHIR Data Type Validation",
+    "Reference Resolution",
+    "Terminology/Coding Validation",
+    "Cardinality Checking",
+    "Interoperability Analysis",
+    "Bulk Validation"
+  ],
+  "references": [
+    "https://www.hl7.org/fhir/R5/",
+    "https://www.hl7.org/implement/standards/product_brief.cfm?product_id=7",
+    "https://www.hl7.org/implement/standards/cdar2/",
+    "https://loinc.org/",
+    "https://www.snomed.org/",
+    "https://www.cdc.gov/nchs/icd/icd10cm.htm",
+    "https://www.hl7.org/fhir/us/core/",
+    "https://digital.nhs.uk/developer/api-catalogue/fhir-uk-core"
+  ]
+}

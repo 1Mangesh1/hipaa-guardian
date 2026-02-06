@@ -1,0 +1,44 @@
+{
+  "name": "fhir-hl7-validator",
+  "version": "1.0.0",
+  "description": "Healthcare data format validation for FHIR R5 resources, HL7 v2 messages, and CDA clinical documents. Validates schema compliance, references, terminology (SNOMED CT, LOINC, ICD-10), cardinality, and interoperability with detailed error reporting.",
+  "author": {
+    "name": "1mangesh1",
+    "url": "https://github.com/1Mangesh1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1Mangesh1/hipaa-guardian"
+  },
+  "license": "MIT",
+  "keywords": [
+    "fhir",
+    "hl7",
+    "cda",
+    "healthcare",
+    "validation",
+    "interoperability",
+    "ehr",
+    "healthcare-data",
+    "r5",
+    "snomed-ct",
+    "loinc",
+    "icd-10",
+    "us-core",
+    "uk-core"
+  ],
+  "agents": [
+    "claude",
+    "cursor",
+    "windsurf",
+    "aider"
+  ],
+  "compliance": {
+    "hipaa": true,
+    "standards": [
+      "HL7 FHIR R5",
+      "HL7 v2.5.1",
+      "CDA R2"
+    ]
+  }
+}
