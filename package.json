@@ -1,6 +1,6 @@
 {
   "name": "@1mangesh1/dev-skills",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A collection of AI agent skills for development, compliance, and security workflows",
   "author": {
     "name": "1mangesh1",
@@ -23,7 +23,14 @@
     "docker",
     "github-cli",
     "mcp",
-    "devtools"
+    "devtools",
+    "testing",
+    "ci-cd",
+    "kubernetes",
+    "terraform",
+    "aws",
+    "linting",
+    "code-review"
   ],
   "skills": {
     "hipaa-guardian": {
@@ -85,6 +92,106 @@
       "version": "1.0.0",
       "path": "./skills/dotfiles",
       "description": "Dotfile management with stow, chezmoi"
+    },
+    "pytest": {
+      "version": "1.0.0",
+      "path": "./skills/pytest",
+      "description": "Python testing with fixtures, mocking, coverage"
+    },
+    "jest-vitest": {
+      "version": "1.0.0",
+      "path": "./skills/jest-vitest",
+      "description": "JavaScript/TypeScript testing with Jest and Vitest"
+    },
+    "github-actions": {
+      "version": "1.0.0",
+      "path": "./skills/github-actions",
+      "description": "CI/CD workflows, matrix builds, caching, secrets"
+    },
+    "sql-migrations": {
+      "version": "1.0.0",
+      "path": "./skills/sql-migrations",
+      "description": "Database migrations with Prisma, Drizzle, raw SQL"
+    },
+    "aws-cli": {
+      "version": "1.0.0",
+      "path": "./skills/aws-cli",
+      "description": "AWS CLI mastery, profiles, S3, EC2, Lambda"
+    },
+    "kubernetes": {
+      "version": "1.0.0",
+      "path": "./skills/kubernetes",
+      "description": "kubectl, deployments, services, pod debugging"
+    },
+    "terraform": {
+      "version": "1.0.0",
+      "path": "./skills/terraform",
+      "description": "Infrastructure as code, modules, state management"
+    },
+    "python-env": {
+      "version": "1.0.0",
+      "path": "./skills/python-env",
+      "description": "Poetry, Pipenv, venv, pyenv, uv environment management"
+    },
+    "regex": {
+      "version": "1.0.0",
+      "path": "./skills/regex",
+      "description": "Regular expression patterns, testing, common recipes"
+    },
+    "git-advanced": {
+      "version": "1.0.0",
+      "path": "./skills/git-advanced",
+      "description": "Rebase, cherry-pick, bisect, reflog, recovery"
+    },
+    "nginx": {
+      "version": "1.0.0",
+      "path": "./skills/nginx",
+      "description": "Web server config, reverse proxy, SSL/TLS"
+    },
+    "redis": {
+      "version": "1.0.0",
+      "path": "./skills/redis",
+      "description": "Caching patterns, CLI, data structures, pub/sub"
+    },
+    "graphql": {
+      "version": "1.0.0",
+      "path": "./skills/graphql",
+      "description": "Schema design, queries, mutations, tooling"
+    },
+    "tmux": {
+      "version": "1.0.0",
+      "path": "./skills/tmux",
+      "description": "Terminal multiplexing, sessions, scripting"
+    },
+    "vim-motions": {
+      "version": "1.0.0",
+      "path": "./skills/vim-motions",
+      "description": "Vim keybindings, motions, text objects for editors"
+    },
+    "changelog": {
+      "version": "1.0.0",
+      "path": "./skills/changelog",
+      "description": "Changelogs, release notes, semantic versioning"
+    },
+    "code-review": {
+      "version": "1.0.0",
+      "path": "./skills/code-review",
+      "description": "Code review checklists, PR review patterns"
+    },
+    "dependency-audit": {
+      "version": "1.0.0",
+      "path": "./skills/dependency-audit",
+      "description": "Auditing & updating dependencies safely"
+    },
+    "lint-format": {
+      "version": "1.0.0",
+      "path": "./skills/lint-format",
+      "description": "ESLint, Prettier, Ruff, Black, editorconfig setup"
+    },
+    "env-debug": {
+      "version": "1.0.0",
+      "path": "./skills/env-debug",
+      "description": "Debugging PATH, permissions, env vars, configs"
     }
   },
   "engines": {
