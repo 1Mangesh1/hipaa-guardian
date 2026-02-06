@@ -1,199 +1,52 @@
 {
-  "name": "@1mangesh1/dev-skills",
-  "version": "1.2.0",
-  "description": "A collection of AI agent skills for development, compliance, and security workflows",
+  "name": "@1mangesh1/hipaa-guardian",
+  "version": "1.0.0",
+  "description": "HIPAA-compliant AI skills for healthcare professionals: PHI detection, compliance auditing, healthcare data security",
   "author": {
     "name": "1mangesh1",
     "url": "https://github.com/1Mangesh1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/1Mangesh1/dev-skills"
+    "url": "https://github.com/1Mangesh1/hipaa-guardian"
   },
   "license": "MIT",
   "keywords": [
+    "hipaa",
+    "hipaa-compliance",
+    "phi-detection",
+    "pii-detection",
+    "healthcare-security",
+    "healthcare-data",
+    "medical-records",
     "ai-skills",
     "agent-skills",
     "claude-code",
     "cursor",
     "windsurf",
-    "aider",
-    "hipaa",
-    "security",
-    "docker",
-    "github-cli",
-    "mcp",
-    "devtools",
-    "testing",
-    "ci-cd",
-    "kubernetes",
-    "terraform",
-    "aws",
-    "linting",
-    "code-review"
+    "compliance",
+    "audit",
+    "nist-csf",
+    "hl7-fhir",
+    "security"
   ],
+  "skills": {
   "skills": {
     "hipaa-guardian": {
       "version": "1.2.0",
       "path": "./skills/hipaa-guardian",
-      "description": "HIPAA compliance, PHI/PII detection, healthcare formats"
-    },
-    "secret-scanner": {
-      "version": "1.0.0",
-      "path": "./skills/secret-scanner",
-      "description": "Secret detection, API keys, credentials (50+ providers)"
-    },
-    "gh-cli": {
-      "version": "1.0.0",
-      "path": "./skills/gh-cli",
-      "description": "GitHub CLI for PRs, issues, releases, actions"
-    },
-    "docker-helper": {
-      "version": "1.0.0",
-      "path": "./skills/docker-helper",
-      "description": "Docker & Compose commands, debugging, optimization"
-    },
-    "git-hooks": {
-      "version": "1.0.0",
-      "path": "./skills/git-hooks",
-      "description": "Pre-commit hooks with Husky, lint-staged, pre-commit"
-    },
-    "mcp-setup": {
-      "version": "1.0.0",
-      "path": "./skills/mcp-setup",
-      "description": "MCP server configuration for Claude integration"
-    },
-    "jq-yq": {
-      "version": "1.0.0",
-      "path": "./skills/jq-yq",
-      "description": "JSON/YAML manipulation with jq and yq"
-    },
-    "curl-http": {
-      "version": "1.0.0",
-      "path": "./skills/curl-http",
-      "description": "API testing with curl and HTTPie"
-    },
-    "ssh-config": {
-      "version": "1.0.0",
-      "path": "./skills/ssh-config",
-      "description": "SSH keys, config, tunnels, jump hosts"
-    },
-    "npm-scripts": {
-      "version": "1.0.0",
-      "path": "./skills/npm-scripts",
-      "description": "npm/yarn/pnpm scripts, workspaces, publishing"
-    },
-    "makefile": {
-      "version": "1.0.0",
-      "path": "./skills/makefile",
-      "description": "GNU Make patterns for project automation"
-    },
-    "dotfiles": {
-      "version": "1.0.0",
-      "path": "./skills/dotfiles",
-      "description": "Dotfile management with stow, chezmoi"
-    },
-    "pytest": {
-      "version": "1.0.0",
-      "path": "./skills/pytest",
-      "description": "Python testing with fixtures, mocking, coverage"
-    },
-    "jest-vitest": {
-      "version": "1.0.0",
-      "path": "./skills/jest-vitest",
-      "description": "JavaScript/TypeScript testing with Jest and Vitest"
-    },
-    "github-actions": {
-      "version": "1.0.0",
-      "path": "./skills/github-actions",
-      "description": "CI/CD workflows, matrix builds, caching, secrets"
-    },
-    "sql-migrations": {
-      "version": "1.0.0",
-      "path": "./skills/sql-migrations",
-      "description": "Database migrations with Prisma, Drizzle, raw SQL"
-    },
-    "aws-cli": {
-      "version": "1.0.0",
-      "path": "./skills/aws-cli",
-      "description": "AWS CLI mastery, profiles, S3, EC2, Lambda"
-    },
-    "kubernetes": {
-      "version": "1.0.0",
-      "path": "./skills/kubernetes",
-      "description": "kubectl, deployments, services, pod debugging"
-    },
-    "terraform": {
-      "version": "1.0.0",
-      "path": "./skills/terraform",
-      "description": "Infrastructure as code, modules, state management"
-    },
-    "python-env": {
-      "version": "1.0.0",
-      "path": "./skills/python-env",
-      "description": "Poetry, Pipenv, venv, pyenv, uv environment management"
-    },
-    "regex": {
-      "version": "1.0.0",
-      "path": "./skills/regex",
-      "description": "Regular expression patterns, testing, common recipes"
-    },
-    "git-advanced": {
-      "version": "1.0.0",
-      "path": "./skills/git-advanced",
-      "description": "Rebase, cherry-pick, bisect, reflog, recovery"
-    },
-    "nginx": {
-      "version": "1.0.0",
-      "path": "./skills/nginx",
-      "description": "Web server config, reverse proxy, SSL/TLS"
-    },
-    "redis": {
-      "version": "1.0.0",
-      "path": "./skills/redis",
-      "description": "Caching patterns, CLI, data structures, pub/sub"
-    },
-    "graphql": {
-      "version": "1.0.0",
-      "path": "./skills/graphql",
-      "description": "Schema design, queries, mutations, tooling"
-    },
-    "tmux": {
-      "version": "1.0.0",
-      "path": "./skills/tmux",
-      "description": "Terminal multiplexing, sessions, scripting"
-    },
-    "vim-motions": {
-      "version": "1.0.0",
-      "path": "./skills/vim-motions",
-      "description": "Vim keybindings, motions, text objects for editors"
-    },
-    "changelog": {
-      "version": "1.0.0",
-      "path": "./skills/changelog",
-      "description": "Changelogs, release notes, semantic versioning"
-    },
-    "code-review": {
-      "version": "1.0.0",
-      "path": "./skills/code-review",
-      "description": "Code review checklists, PR review patterns"
-    },
-    "dependency-audit": {
-      "version": "1.0.0",
-      "path": "./skills/dependency-audit",
-      "description": "Auditing & updating dependencies safely"
-    },
-    "lint-format": {
-      "version": "1.0.0",
-      "path": "./skills/lint-format",
-      "description": "ESLint, Prettier, Ruff, Black, editorconfig setup"
-    },
-    "env-debug": {
-      "version": "1.0.0",
-      "path": "./skills/env-debug",
-      "description": "Debugging PATH, permissions, env vars, configs"
+      "description": "HIPAA compliance, PHI/PII detection, healthcare formats, audit logging",
+      "category": "healthcare/compliance",
+      "tags": ["hipaa", "phi-detection", "pii-detection", "healthcare-security"],
+      "agents": ["claude", "cursor", "windsurf", "aider"],
+      "compliance": {
+        "hipaa": true,
+        "nist_csf": "2.0",
+        "hl7_fhir": "R5"
+      }
     }
   },
+  "skillCategories": ["healthcare", "compliance", "security"],
   "engines": {
     "node": ">=16.0.0"
   }

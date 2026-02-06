@@ -1,127 +1,112 @@
-# dev-skills
+# HIPAA Guardian
 
-A collection of AI agent skills for development, compliance, and security workflows.
+**AI-powered HIPAA compliance, PHI/PII detection, and healthcare data security skills for Claude, Cursor, Windsurf, and AI agents.**
+
+HIPAA Guardian is a specialized skills collection designed for healthcare professionals, developers, and organizations building HIPAA-compliant systems. It provides automated tools for detecting Protected Health Information (PHI), validating healthcare data formats, maintaining compliance audit trails, and integrating with healthcare standards like HL7 FHIR and NIST Cybersecurity Framework 2.0.
+
+## ⚠️ Compliance Statement
+
+- ✅ **HIPAA-Ready**: Designed for HIPAA BAA (Business Associate Agreement) environments
+- ✅ **Audit Trail**: Supports immutable logging per 45 CFR §164.312(b)
+- ✅ **Standards Integration**: HL7 FHIR R5, NIST CSF 2.0, HITRUST CSF alignment
+- ✅ **Open Source**: MIT License, security-first code review process
+
+> **Note**: This skill collection is designed to support HIPAA compliance but does not guarantee HIPAA compliance. For production environments, consult with your legal and compliance team and execute a Business Associate Agreement (BAA) with any service provider.
 
 ## Installation
 
-Works with 40+ AI coding agents including Claude Code, Cursor, Windsurf, Aider, Continue, Cline, and more.
-
-### Install All Skills
-
 ```bash
-npx skills add 1Mangesh1/dev-skills
+# Install all HIPAA Guardian skills
+npx skills add @1mangesh1/hipaa-guardian
+
+# Install specific skill
+npx skills add @1mangesh1/hipaa-guardian --skill hipaa-guardian
 ```
 
-### Install Specific Skill
+## Available Skills (1)
 
-```bash
-npx skills add 1Mangesh1/dev-skills --skill hipaa-guardian
-npx skills add 1Mangesh1/dev-skills --skill secret-scanner
-npx skills add 1Mangesh1/dev-skills --skill pytest
-```
+| Skill | Purpose | Standards | Version |
+|-------|---------|-----------|---------|
+| [hipaa-guardian](./skills/hipaa-guardian/) | PHI/PII detection, healthcare format validation, compliance audit logging | HIPAA §164.500+, NIST SP 800-188, HL7 FHIR R5 | 1.2.0 |
 
-## Available Skills (32)
+### hipaa-guardian Skill Features
 
-| Skill | Description | Version |
-|-------|-------------|---------|
-| [hipaa-guardian](./skills/hipaa-guardian/) | HIPAA compliance, PHI/PII detection, healthcare formats | 1.2.0 |
-| [secret-scanner](./skills/secret-scanner/) | Secret detection, API keys, credentials (50+ providers) | 1.0.0 |
-| [gh-cli](./skills/gh-cli/) | GitHub CLI for PRs, issues, releases, actions | 1.0.0 |
-| [docker-helper](./skills/docker-helper/) | Docker & Compose commands, debugging, optimization | 1.0.0 |
-| [git-hooks](./skills/git-hooks/) | Pre-commit hooks with Husky, lint-staged, pre-commit | 1.0.0 |
-| [mcp-setup](./skills/mcp-setup/) | MCP server configuration for Claude integration | 1.0.0 |
-| [jq-yq](./skills/jq-yq/) | JSON/YAML manipulation with jq and yq | 1.0.0 |
-| [curl-http](./skills/curl-http/) | API testing with curl and HTTPie | 1.0.0 |
-| [ssh-config](./skills/ssh-config/) | SSH keys, config, tunnels, jump hosts | 1.0.0 |
-| [npm-scripts](./skills/npm-scripts/) | npm/yarn/pnpm scripts, workspaces, publishing | 1.0.0 |
-| [makefile](./skills/makefile/) | GNU Make patterns for project automation | 1.0.0 |
-| [dotfiles](./skills/dotfiles/) | Dotfile management with stow, chezmoi | 1.0.0 |
-| [pytest](./skills/pytest/) | Python testing with fixtures, mocking, coverage | 1.0.0 |
-| [jest-vitest](./skills/jest-vitest/) | JavaScript/TypeScript testing with Jest and Vitest | 1.0.0 |
-| [github-actions](./skills/github-actions/) | CI/CD workflows, matrix builds, caching, secrets | 1.0.0 |
-| [sql-migrations](./skills/sql-migrations/) | Database migrations with Prisma, Drizzle, raw SQL | 1.0.0 |
-| [aws-cli](./skills/aws-cli/) | AWS CLI mastery, profiles, S3, EC2, Lambda | 1.0.0 |
-| [kubernetes](./skills/kubernetes/) | kubectl, deployments, services, pod debugging | 1.0.0 |
-| [terraform](./skills/terraform/) | Infrastructure as code, modules, state management | 1.0.0 |
-| [python-env](./skills/python-env/) | Poetry, Pipenv, venv, pyenv, uv environment management | 1.0.0 |
-| [regex](./skills/regex/) | Regular expression patterns, testing, common recipes | 1.0.0 |
-| [git-advanced](./skills/git-advanced/) | Rebase, cherry-pick, bisect, reflog, recovery | 1.0.0 |
-| [nginx](./skills/nginx/) | Web server config, reverse proxy, SSL/TLS | 1.0.0 |
-| [redis](./skills/redis/) | Caching patterns, CLI, data structures, pub/sub | 1.0.0 |
-| [graphql](./skills/graphql/) | Schema design, queries, mutations, tooling | 1.0.0 |
-| [tmux](./skills/tmux/) | Terminal multiplexing, sessions, scripting | 1.0.0 |
-| [vim-motions](./skills/vim-motions/) | Vim keybindings, motions, text objects for editors | 1.0.0 |
-| [changelog](./skills/changelog/) | Changelogs, release notes, semantic versioning | 1.0.0 |
-| [code-review](./skills/code-review/) | Code review checklists, PR review patterns | 1.0.0 |
-| [dependency-audit](./skills/dependency-audit/) | Auditing & updating dependencies safely | 1.0.0 |
-| [lint-format](./skills/lint-format/) | ESLint, Prettier, Ruff, Black, editorconfig setup | 1.0.0 |
-| [env-debug](./skills/env-debug/) | Debugging PATH, permissions, env vars, configs | 1.0.0 |
+**PHI Detection**:
+- 18 PHI identifiers per 45 CFR §164.103
+- MRN (Medical Record Number), SSN, patient names, DOB patterns
+- Health plan beneficiary numbers, facility identification
+- Entropy-based detection for encoded/hashed PHI
 
-## Skills by Category
+**Healthcare Format Support**:
+- HL7 v2 message validation (OBX, RXO, ADT segments)
+- FHIR R5 resource schemas (Patient, Observation, MedicationRequest)
+- CDA (Clinical Document Architecture) document parsing
+- X12 EDI healthcare claims format
 
-### Security & Compliance
-- **hipaa-guardian** - HIPAA compliance, PHI/PII detection
-- **secret-scanner** - API keys, tokens, credential detection
+**Compliance Features**:
+- HIPAA audit trail logging (§164.312(b))
+- Breach risk assessment
+- De-identification validation
+- NIST CSF 2.0 alignment (Detect, Respond functions)
 
-### Testing
-- **pytest** - Python testing with pytest
-- **jest-vitest** - JavaScript/TypeScript testing
+**Integration Ready**:
+- Claude Code, Cursor, and AI agent prompt activation triggers
+- OpenAPI 3.1 specification for plugin-based deployment
+- Works with MCP servers for extended functionality
 
-### CI/CD & Infrastructure
-- **github-actions** - GitHub Actions workflows
-- **kubernetes** - Kubernetes cluster management
-- **terraform** - Infrastructure as code
-- **aws-cli** - AWS CLI operations
-- **nginx** - Web server configuration
+## Regulatory References
 
-### Database
-- **sql-migrations** - Database migrations (Prisma, Drizzle, SQL)
-- **redis** - Caching and data structures
+### HIPAA Rules (45 CFR)
+- **Privacy Rule (§164.500+)**: Patient rights, use & disclosure, PHI protections
+- **Security Rule (§164.300+)**: Administrative, physical, and technical safeguards
+- **Breach Notification Rule (§164.400+)**: Notification requirements & documentation
 
-### Developer Tools
-- **gh-cli** - GitHub CLI mastery
-- **docker-helper** - Container operations
-- **git-hooks** - Automated code quality
-- **git-advanced** - Advanced Git operations
-- **mcp-setup** - MCP server integration
-- **graphql** - GraphQL schema and queries
+### Healthcare Standards
+- **[HL7 FHIR R5](https://www.hl7.org/fhir/R5/)**: International healthcare data exchange standard
+- **[NIST Cybersecurity Framework 2.0](https://www.nist.gov/cyberframework)**: Governance, risk management, detect/respond functions
+- **[NIST SP 800-66](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-66r1.pdf)**: HIPAA security implementations
+- **[NIST SP 800-188](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-188.pdf)**: De-identification of personal information
 
-### CLI Utilities
-- **jq-yq** - JSON/YAML processing
-- **curl-http** - HTTP request testing
-- **ssh-config** - SSH management
-- **npm-scripts** - Package management
-- **makefile** - Build automation
-- **dotfiles** - Config management
-- **tmux** - Terminal multiplexing
-- **vim-motions** - Vim keybindings
+### External Resources
+- **[HHS HIPAA Guidance](https://www.hhs.gov/hipaa)**: Official HIPAA compliance portal
+- **[OCR Enforcement](https://www.hhs.gov/hipaa/for-professionals/special-topics/enforcement)**: HIPAA violations, corrective action plans
+- **[HITRUST CSF](https://hitrustalliance.net/csf/)**: Certified HIPAA compliance framework
 
-### Language & Environment
-- **python-env** - Python environment management
-- **regex** - Regular expressions
+## Getting Started
 
-### Boring Tasks Devs Hate (Automated!)
-- **changelog** - Writing changelogs and release notes
-- **code-review** - Code review checklists and feedback
-- **dependency-audit** - Auditing and updating dependencies
-- **lint-format** - Setting up linting and formatting
-- **env-debug** - Debugging environment issues
+### Activation Triggers
 
-## Compatibility
+The hipaa-guardian skill is automatically recommended when you mention:
+- "scan for PHI", "detect PII", "protected health information"
+- "HIPAA compliance", "HIPAA audit", "healthcare data security"
+- "FHIR validation", "HL7 support", "health insurance portability"
+- "audit trail", "compliance logging", "breach assessment"
 
-| Agent | Status |
-|-------|--------|
-| Claude Code | Supported |
-| Cursor | Supported |
-| Windsurf | Supported |
-| Aider | Supported |
-| Continue | Supported |
-| Cline | Supported |
+## Contributing
+
+Contributions are welcome! Please review:
+1. [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution guidelines
+2. [COMPLIANCE.md](./COMPLIANCE.md) - Regulatory mapping for new skills
+3. [SECURITY.md](./SECURITY.md) - Security guidelines for healthcare data handling
+
+## Documentation
+
+- **[COMPLIANCE.md](./COMPLIANCE.md)** - HIPAA compliance matrix with regulatory mappings
+- **[SECURITY.md](./SECURITY.md)** - Security architecture and data handling practices
+- **[references/](./references/)** - Detailed guides on HIPAA rules, HL7 FHIR, NIST CSF
+
+## Support
+
+- **Documentation**: [./references/](./references/) directory for detailed guides
+- **Issues**: Report bugs or feature requests on GitHub
+- **Security**: Report security vulnerabilities privately to security@example.com
 
 ## License
 
-MIT
+MIT License - See [LICENSE.txt](./LICENSE.txt)
 
-## Author
+---
 
-[1mangesh1](https://github.com/1Mangesh1)
+**Last Updated**: February 2026  
+**Repository**: [1Mangesh1/hipaa-guardian](https://github.com/1Mangesh1/hipaa-guardian)  
+**Status**: Active Development

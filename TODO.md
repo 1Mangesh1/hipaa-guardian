@@ -1,35 +1,39 @@
-# TODO: New Skills Checklist
 
-## Tier 1: Critical Workflow Gaps
-- [ ] pytest - Python testing with pytest, fixtures, mocking, coverage
-- [ ] jest-vitest - JavaScript/TypeScript testing with Jest and Vitest
-- [ ] github-actions - CI/CD workflows, matrix builds, caching, secrets
-- [ ] sql-migrations - Database migrations, Prisma, Drizzle, raw SQL
-- [ ] aws-cli - AWS CLI mastery, profiles, common service commands
+so now big change in plan that we will be renaming this repo back to hippa-guardian and we will be focusing on HIPAA compliance skills instead of general developer skills.
+for general developer skills, we will create a new repo called "dev-skills-collection" and move all the general developer skills there.
+so now we go to cd .. and mkdir dev-skills-collection and move all the general developer skills from this repo to the new repo. then we will update the README.md in both repos to reflect the changes. we will also update the package.json in both repos to reflect the new names and skill definitions. finally, we will commit and push all changes to both repos.
+use gh cli to do all the stuff so do correct and neatly right commands for each step. use bash commands to achieve the tasks mentioned above.
 
-## Tier 2: High-Value Specializations
-- [ ] kubernetes - kubectl, deployments, services, debugging pods
-- [ ] terraform - Infrastructure as code, modules, state management
-- [ ] python-env - Poetry, Pipenv, venv, conda management
-- [ ] regex - Regular expression patterns, testing, recipes
-- [ ] git-advanced - Rebase, cherry-pick, bisect, reflog, recovery
+```bash# Step 1: Rename the current repo to hippa-guardian
+gh repo rename hippa-guardian
+# Step 2: Create a new repo for general developer skills
+gh repo create dev-skills-collection --public
+# Step 3: Move general developer skills to the new repo
+cd ..
+mkdir dev-skills-collection
+cd .. 
+cd hippa-guardian
+move all general developer skills to ../dev-skills-collection
+# Step 4: Update README.md in both repos
+# For hippa-guardian
+rewrite README.md to focus on HIPAA compliance skills whatever we have in the hippa-guardian repo
+# For dev-skills-collection
+rewrite README.md to focus on general developer skills whatever we have in the dev-skills-collection repo
+# Step 5: Update package.json in both repos
+# For hippa-guardian
+update package.json to reflect the new name "hippa-guardian" and update skill definitions to focus on HIPAA compliance skills
+# For dev-skills-collection
+update package.json to reflect the new name "dev-skills-collection" and update skill definitions
 
-## Tier 3: Specialized Tools
-- [ ] nginx - Web server config, reverse proxy, SSL/TLS
-- [ ] redis - Caching patterns, CLI, data structures, Lua scripts
-- [ ] graphql - Schema design, queries, mutations, tooling
-- [ ] tmux - Terminal multiplexing, sessions, scripting
-- [ ] vim-motions - Vim keybindings, motions, text objects
+also do websearch for best practices for structuring a skills collection repository and update the README.md files accordingly to follow those best practices.
 
-## Tier 4: Boring Tasks Devs Hate
-- [ ] changelog - Changelogs, release notes, semantic versioning
-- [ ] code-review - Code review checklists, PR review patterns
-- [ ] dependency-audit - Auditing & updating dependencies safely
-- [ ] lint-format - ESLint, Prettier, Black, Ruff, editorconfig
-- [ ] env-debug - Debugging PATH, permissions, env vars, configs
+same goes for hippa-guardian repo, do websearch for best practices for structuring a HIPAA compliance skills collection repository and update the README.md file accordingly to follow those best practices.
 
-## Collection Updates
-- [ ] Update README.md with all new skills
-- [ ] Update package.json with skill definitions, bump to v1.2.0
-- [ ] Update CLAUDE.md with new skill references
-- [ ] Commit and push all changes
+and also make sure to include links to relevant resources, documentation, and tools in both README.md files to provide additional value to users of the repositories. 
+
+Finally, after making all the necessary changes, commit and push all changes to both repositories using the following commands:
+and also go to internet understand how claude plugins work and how to integrate them into our repositories to enhance the functionality and user experience. 
+
+and the git push all 
+all tools allowed before doing all just ask for tools permisssion once only not each time 
+all freedom
