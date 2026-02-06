@@ -13,10 +13,10 @@ info:
     url: 'https://github.com/1Mangesh1/hipaa-guardian/blob/main/LICENSE'
 
 servers:
-  - url: 'https://api.hipaa-guardian.dev'
-    description: Production API
   - url: 'http://localhost:3000'
-    description: Development API
+    description: Local Development API
+  - url: 'http://localhost:3001'
+    description: Alternative Local Development API
 
 tags:
   - name: PHI Detection
