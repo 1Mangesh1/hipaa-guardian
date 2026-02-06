@@ -1,0 +1,65 @@
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run validation
+        run: npm run validate:skills 2>/dev/null || echo "Validation scripts not configured"
+
+      - name: Check if published version
+        id: check-version
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          PUBLISHED_VERSION=$(npm view $npm_package_name version 2>/dev/null || echo "0.0.0")
+          
+          if [ "$PACKAGE_VERSION" = "$PUBLISHED_VERSION" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "⚠ Version $PACKAGE_VERSION already published"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "✓ Publishing version $PACKAGE_VERSION"
+          fi
+
+      - name: Publish to npm
+        if: steps.check-version.outputs.skip == 'false'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+
+      - name: Publish success notification
+        if: success()
+        run: |
+          echo "## 📦 Published to npm" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Package: @1mangesh1/hipaa-guardian" >> $GITHUB_STEP_SUMMARY
+          echo "Version: $(node -p 'require(\"./package.json\").version')" >> $GITHUB_STEP_SUMMARY

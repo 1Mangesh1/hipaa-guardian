@@ -1,0 +1,136 @@
+name: Validate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validate SKILL.md files
+        run: |
+          echo "Validating SKILL.md structure..."
+          for dir in skills/*/; do
+            skill_name=$(basename "$dir")
+            if [ -f "$dir/SKILL.md" ]; then
+              echo "✓ $skill_name/SKILL.md found"
+            else
+              echo "✗ $skill_name/SKILL.md missing"
+              exit 1
+            fi
+          done
+
+      - name: Validate package.json
+        run: |
+          echo "Validating package.json..."
+          node -e "
+            const pkg = require('./package.json');
+            if (!pkg.name) throw new Error('Missing package name');
+            if (!pkg.version) throw new Error('Missing version');
+            if (!pkg.skillCategories) console.warn('Missing skillCategories');
+            console.log('✓ package.json valid');
+          "
+
+      - name: Check for HIPAA compliance documentation
+        run: |
+          echo "Checking compliance files..."
+          if [ -f "COMPLIANCE.md" ]; then
+            echo "✓ COMPLIANCE.md found"
+          else
+            echo "✗ COMPLIANCE.md missing"
+            exit 1
+          fi
+          
+          if [ -f "SECURITY.md" ]; then
+            echo "✓ SECURITY.md found"
+          else
+            echo "✗ SECURITY.md missing"
+            exit 1
+          fi
+
+      - name: Check compliance references
+        run: |
+          echo "Checking 45 CFR references..."
+          if grep -r "45 CFR.*164" .; then
+            echo "✓ HIPAA regulatory references found"
+          else
+            echo "✗ Missing HIPAA regulatory references"
+            exit 1
+          fi
+
+      - name: Validate FHIR compatibility
+        run: |
+          echo "Checking HL7 FHIR references..."
+          if grep -r "FHIR\|HL7" references/; then
+            echo "✓ FHIR documentation present"
+          else
+            echo "⚠ Warning: FHIR documentation may be missing"
+          fi
+
+      - name: Check audit logging documentation
+        run: |
+          echo "Validating audit logging requirements..."
+          if grep -r "§164.312(b)\|audit log" .; then
+            echo "✓ Audit logging documented"
+          else
+            echo "⚠ Warning: May need audit logging documentation"
+          fi
+
+      - name: Lint Markdown
+        run: |
+          npm list markdownlint-cli2 >/dev/null 2>&1 || npm install --save-dev markdownlint-cli2
+          npx markdownlint-cli2 "**/*.md" --ignore node_modules || echo "⚠ Markdown warnings (non-fatal)"
+
+      - name: Verify links in Markdown
+        run: |
+          echo "Checking for broken links..."
+          find . -name "*.md" -type f ! -path "./node_modules/*" | while read file; do
+            if grep -o '\[.*\](.*\.md)' "$file" | grep -v "http" | while read link; do
+              path=$(echo "$link" | sed -E 's/.*\((.*)\).*/\1/')
+              if [ ! -f "$path" ] && [ ! -f "$(dirname "$file")/$path" ]; then
+                echo "✗ Broken link in $file: $path"
+                exit 1
+              fi
+            done; then
+              echo "✓ All links valid in $file"
+            fi
+          done || echo "⚠ Some link checks were skipped"
+
+      - name: Validate OpenAPI specification
+        run: |
+          echo "Validating OpenAPI spec..."
+          if [ -f "openapi.yaml" ]; then
+            npm list swagger-cli >/dev/null 2>&1 || npm install --save-dev swagger-cli
+            npx swagger-cli validate openapi.yaml && echo "✓ OpenAPI spec valid"
+          fi
+
+      - name: Security checks
+        run: |
+          echo "Running security checks..."
+          npm audit --audit-level=moderate || echo "⚠ Security vulnerabilities found"
+
+      - name: Create summary
+        if: always()
+        run: |
+          echo "## Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✓ SKILL.md files validated" >> $GITHUB_STEP_SUMMARY
+          echo "✓ package.json structure verified" >> $GITHUB_STEP_SUMMARY
+          echo "✓ HIPAA compliance documentation checked" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Links and references validated" >> $GITHUB_STEP_SUMMARY

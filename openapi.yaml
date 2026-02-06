@@ -1,0 +1,319 @@
+openapi: 3.1.0
+info:
+  title: HIPAA Guardian API
+  version: 1.0.0
+  description: AI-powered HIPAA compliance and PHI/PII detection API
+  x-logo:
+    url: 'https://raw.githubusercontent.com/1Mangesh1/hipaa-guardian/main/README.md'
+  contact:
+    name: Mangesh Bide
+    url: 'https://github.com/1Mangesh1'
+  license:
+    name: MIT
+    url: 'https://github.com/1Mangesh1/hipaa-guardian/blob/main/LICENSE'
+
+servers:
+  - url: 'https://api.hipaa-guardian.dev'
+    description: Production API
+  - url: 'http://localhost:3000'
+    description: Development API
+
+tags:
+  - name: PHI Detection
+    description: Detect Protected Health Information (PHI)
+  - name: FHIR Validation
+    description: Validate HL7 FHIR R5 resources
+  - name: Audit Logging
+    description: Generate HIPAA-compliant audit logs
+  - name: Compliance
+    description: Check regulatory compliance
+
+paths:
+  /detect-phi:
+    post:
+      tags:
+        - PHI Detection
+      summary: Scan for Protected Health Information
+      description: Scan content for 18 HIPAA PHI identifiers
+      operationId: detectPHI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  description: Text content to scan for PHI
+                  example: "Patient John Doe, DOB 01/15/1985, SSN 123-45-6789"
+                sensitivity:
+                  type: string
+                  enum: [low, medium, high]
+                  default: medium
+                  description: Detection sensitivity level
+      responses:
+        '200':
+          description: PHI detection results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  findings:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PHIFinding'
+                  summary:
+                    $ref: '#/components/schemas/DetectionSummary'
+                  risk_score:
+                    type: number
+                    minimum: 0
+                    maximum: 1
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /validate-fhir:
+    post:
+      tags:
+        - FHIR Validation
+      summary: Validate FHIR R5 Resource
+      description: Validate healthcare data against FHIR R5 specifications
+      operationId: validateFHIR
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - resource
+              properties:
+                resource:
+                  type: object
+                  description: FHIR resource to validate
+                  example:
+                    resourceType: Patient
+                    identifier:
+                      - system: http://hospital.org/mrn
+                        value: "12345"
+                    name:
+                      - given: ["John"]
+                        family: Doe
+      responses:
+        '200':
+          description: Validation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                  issues:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ValidationIssue'
+                  phi_elements:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: Invalid FHIR resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /audit-log:
+    post:
+      tags:
+        - Audit Logging
+      summary: Generate Audit Log Entry
+      description: Create 45 CFR §164.312(b) compliant audit log
+      operationId: createAuditLog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - action
+                - resource
+              properties:
+                user_id:
+                  type: string
+                  description: User performing action
+                action:
+                  type: string
+                  enum: [CREATE, READ, UPDATE, DELETE, EXPORT, LOGIN, LOGOUT]
+                resource:
+                  type: string
+                  description: Resource identifier (patient ID, document, etc.)
+                details:
+                  type: string
+                  description: Additional action details
+      responses:
+        '201':
+          description: Audit log entry created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogEntry'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /compliance-check:
+    post:
+      tags:
+        - Compliance
+      summary: Check Regulatory Compliance
+      description: Verify HIPAA, NIST CSF 2.0, and HL7 compliance
+      operationId: checkCompliance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                frameworks:
+                  type: array
+                  items:
+                    type: string
+                    enum: [hipaa, nist_csf_2.0, hl7_fhir_r5, nist_sp_800_66]
+                  description: Frameworks to check against
+      responses:
+        '200':
+          description: Compliance check results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  frameworks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ComplianceResult'
+
+components:
+  schemas:
+    PHIFinding:
+      type: object
+      required:
+        - type
+        - pattern
+        - location
+      properties:
+        type:
+          type: string
+          enum: [ssn, mrn, date, name, phone, email, address, biometric]
+          description: Type of PHI identified
+        pattern:
+          type: string
+          description: Matched pattern
+        location:
+          type: object
+          properties:
+            line:
+              type: integer
+            column:
+              type: integer
+        risk_level:
+          type: string
+          enum: [CRITICAL, HIGH, MEDIUM, LOW]
+        remediation:
+          type: string
+          description: Recommended fix
+
+    DetectionSummary:
+      type: object
+      properties:
+        total_findings:
+          type: integer
+        critical_count:
+          type: integer
+        high_count:
+          type: integer
+        confidentiality_impact:
+          type: string
+          enum: [NONE, LOW, MEDIUM, HIGH, CRITICAL]
+
+    ValidationIssue:
+      type: object
+      properties:
+        severity:
+          type: string
+          enum: [error, warning, info]
+        message:
+          type: string
+        path:
+          type: array
+          items:
+            type: string
+
+    AuditLogEntry:
+      type: object
+      properties:
+        audit_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        user_id:
+          type: string
+        action:
+          type: string
+        resource:
+          type: string
+        result:
+          type: string
+          enum: [SUCCESS, FAILURE]
+        ip_address:
+          type: string
+
+    ComplianceResult:
+      type: object
+      properties:
+        framework:
+          type: string
+        status:
+          type: string
+          enum: [COMPLIANT, WARNINGS, NON_COMPLIANT]
+        findings:
+          type: array
+          items:
+            type: object
+            properties:
+              requirement:
+                type: string
+              status:
+                type: string
+              evidence:
+                type: string
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
