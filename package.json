@@ -1,9 +1,10 @@
 {
   "name": "@1mangesh1/hipaa-guardian",
   "version": "1.0.0",
+  "type": "module",
   "description": "HIPAA-compliant AI skills for healthcare professionals: PHI detection, compliance auditing, healthcare data security",
   "author": {
-    "name": "1mangesh1",
+    "name": "Mangesh Bide",
     "url": "https://github.com/1Mangesh1"
   },
   "repository": {
@@ -30,25 +31,21 @@
     "hl7-fhir",
     "security"
   ],
-  "skills": {
-  "skills": {
-    "hipaa-guardian": {
-      "version": "1.2.0",
-      "path": "./skills/hipaa-guardian",
-      "description": "HIPAA compliance, PHI/PII detection, healthcare formats, audit logging",
-      "category": "healthcare/compliance",
-      "tags": ["hipaa", "phi-detection", "pii-detection", "healthcare-security"],
-      "agents": ["claude", "cursor", "windsurf", "aider"],
-      "compliance": {
-        "hipaa": true,
-        "nist_csf": "2.0",
-        "hl7_fhir": "R5"
-      }
-    }
-  },
-  "skillCategories": ["healthcare", "compliance", "security"],
+  "main": "skills/hipaa-guardian/SKILL.md",
+  "files": [
+    "skills",
+    "references",
+    "README.md",
+    "COMPLIANCE.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "plugin.json",
+    "openapi.yaml"
+  ],
   "engines": {
     "node": ">=16.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
-}
 }
