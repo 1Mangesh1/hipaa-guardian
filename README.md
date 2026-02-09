@@ -55,10 +55,10 @@ Report Generation + Remediation
 
 ```bash
 # Install all HIPAA Guardian skills
-npx skills add @1mangesh1/hipaa-guardian
+npx skills add 1Mangesh1/hipaa-guardian
 
 # Install specific skill
-npx skills add @1mangesh1/hipaa-guardian --skill hipaa-guardian
+npx skills add 1Mangesh1/hipaa-guardian --skill hipaa-guardian
 ```
 
 ## Quick Start

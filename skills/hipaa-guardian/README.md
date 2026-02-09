@@ -6,10 +6,7 @@ HIPAA compliance skill for AI coding agents. Detects PHI/PII, maps to regulation
 
 ```bash
 # Install via skills.sh CLI
-npx skills add 1Mangesh1/dev-skills --skill hipaa-guardian
-
-# Or install all skills in the collection
-npx skills add 1Mangesh1/dev-skills
+npx skills add 1Mangesh1/hipaa-guardian
 ```
 
 ## Capabilities
