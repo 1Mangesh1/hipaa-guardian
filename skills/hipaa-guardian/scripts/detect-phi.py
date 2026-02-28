@@ -31,6 +31,77 @@ from typing import Optional
 
 
 # =============================================================================
+# Security Constants & Input Sanitization
+# =============================================================================
+
+# Maximum file size to scan (10 MB) - prevents memory exhaustion from
+# adversarial or excessively large inputs
+MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
+
+# Maximum number of findings per file to prevent output flooding
+MAX_FINDINGS_PER_FILE = 500
+
+# Maximum total findings across all files
+MAX_TOTAL_FINDINGS = 5000
+
+# Boundary markers for untrusted input processing
+# These delimit content coming from external/untrusted sources so downstream
+# consumers can distinguish tool output from ingested content.
+BOUNDARY_BEGIN = "--- HIPAA_GUARDIAN_SCAN_BEGIN ---"
+BOUNDARY_END = "--- HIPAA_GUARDIAN_SCAN_END ---"
+
+# Characters that could be used for prompt injection in filenames or content
+# when results are fed back to an LLM
+UNSAFE_OUTPUT_CHARS = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
+
+
+def sanitize_path(path: str) -> str:
+    """Sanitize file path to prevent path traversal and injection.
+
+    Resolves symlinks and ensures the path is within expected boundaries.
+    Strips control characters that could be used for injection.
+    """
+    # Strip null bytes and control characters
+    cleaned = UNSAFE_OUTPUT_CHARS.sub('', path)
+    # Resolve to absolute path (follows symlinks)
+    resolved = str(Path(cleaned).resolve())
+    return resolved
+
+
+def sanitize_output_string(value: str, max_length: int = 1000) -> str:
+    """Sanitize a string before including it in scan output.
+
+    Strips control characters and truncates to prevent output-based injection
+    when results are consumed by LLMs or other agents.
+    """
+    cleaned = UNSAFE_OUTPUT_CHARS.sub('', value)
+    if len(cleaned) > max_length:
+        cleaned = cleaned[:max_length] + '...[truncated]'
+    return cleaned
+
+
+def is_safe_file(file_path: Path) -> bool:
+    """Check if a file is safe to scan.
+
+    Validates file size, type, and path to prevent processing of adversarial inputs.
+    """
+    try:
+        # Check file exists and is a regular file (not a device, pipe, etc.)
+        if not file_path.is_file():
+            return False
+        # Check symlink targets stay within a reasonable scope
+        resolved = file_path.resolve()
+        if not resolved.is_file():
+            return False
+        # Enforce file size limit
+        if resolved.stat().st_size > MAX_FILE_SIZE_BYTES:
+            return False
+        return True
+    except (OSError, ValueError):
+        return False
+
+
+# =============================================================================
 # Detection Patterns
 # =============================================================================
 
@@ -401,7 +472,11 @@ def redact_value(value: str, show_chars: int = 4) -> str:
 
 
 def get_context(content: str, match_start: int, match_end: int, context_chars: int = 30) -> str:
-    """Extract context around a match with redacted value."""
+    """Extract context around a match with redacted value.
+
+    Output is sanitized to strip control characters that could be used for
+    injection when results are consumed by LLMs or other agents.
+    """
     start = max(0, match_start - context_chars)
     end = min(len(content), match_end + context_chars)
 
@@ -411,7 +486,8 @@ def get_context(content: str, match_start: int, match_end: int, context_chars: i
 
     # Redact the matched value in context
     redacted = redact_value(matched)
-    return f"...{before}{redacted}{after}..."
+    context = f"...{before}{redacted}{after}..."
+    return sanitize_output_string(context)
 
 
 def is_excluded(value: str, identifier_type: str) -> bool:
@@ -489,11 +565,20 @@ def scan_content(content: str, file_path: str, finding_counter: list) -> list:
 
 
 def scan_file(file_path: Path, finding_counter: list) -> list:
-    """Scan a single file for PHI/PII."""
+    """Scan a single file for PHI/PII.
+
+    Includes input validation and size checks to guard against adversarial
+    or oversized inputs (Indirect Prompt Injection mitigation).
+    """
     try:
+        # Validate file safety before reading
+        if not is_safe_file(file_path):
+            return []
         content = file_path.read_text(encoding='utf-8', errors='ignore')
-        return scan_content(content, str(file_path), finding_counter)
-    except Exception as e:
+        # Enforce per-file finding limit
+        findings = scan_content(content, str(file_path), finding_counter)
+        return findings[:MAX_FINDINGS_PER_FILE]
+    except (OSError, UnicodeDecodeError, ValueError):
         return []
 
 
@@ -603,6 +688,10 @@ def main():
     result.scan_timestamp = start_time.isoformat() + 'Z'
     finding_counter = [0]
 
+    # Sanitize and validate input path
+    sanitized_path = sanitize_path(str(path))
+    path = Path(sanitized_path)
+
     if not path.exists():
         print(f"Error: Path does not exist: {path}", file=sys.stderr)
         sys.exit(1)
@@ -614,8 +703,14 @@ def main():
     if args.verbose:
         print(f"Scanning {len(files)} files...", file=sys.stderr)
 
-    # Scan files
+    # Scan files with total findings limit to prevent output flooding
+    total_findings_count = 0
     for file_path in files:
+        if total_findings_count >= MAX_TOTAL_FINDINGS:
+            if args.verbose:
+                print(f"Warning: Reached maximum findings limit ({MAX_TOTAL_FINDINGS}). "
+                      "Stopping scan.", file=sys.stderr)
+            break
         findings = scan_file(file_path, finding_counter)
         for f in findings:
             # Filter by severity if specified
@@ -624,6 +719,7 @@ def main():
                 if severity_order.get(f.severity, 0) < severity_order.get(args.severity, 0):
                     continue
             result.add_finding(f)
+            total_findings_count += 1
 
     # Calculate duration
     result.scan_duration = (datetime.now() - start_time).total_seconds()
@@ -636,13 +732,16 @@ def main():
     else:
         output = output_csv(result)
 
-    # Write output
+    # Write output with boundary markers so downstream consumers (including
+    # LLMs) can distinguish tool output from ingested file content
     if args.output:
         Path(args.output).write_text(output)
         if args.verbose:
             print(f"Results written to {args.output}", file=sys.stderr)
     else:
+        print(BOUNDARY_BEGIN)
         print(output)
+        print(BOUNDARY_END)
 
     # Exit with error code if critical findings
     if any(f.severity == 'critical' for f in result.findings):

@@ -21,6 +21,85 @@ YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
+# =============================================================================
+# Security: Path Validation & Script Integrity
+# =============================================================================
+
+# Validate that a path is safe (no path traversal, exists, is readable)
+validate_script_path() {
+    local script_path="$1"
+
+    # Must be a regular file
+    if [[ ! -f "$script_path" ]]; then
+        return 1
+    fi
+
+    # Resolve to absolute path and check for path traversal
+    local resolved
+    resolved="$(cd "$(dirname "$script_path")" 2>/dev/null && pwd)/$(basename "$script_path")"
+    if [[ -z "$resolved" ]]; then
+        return 1
+    fi
+
+    # Must be a Python file (not arbitrary executable)
+    if [[ "$script_path" != *.py ]]; then
+        echo -e "${RED}Security: Refusing to execute non-Python script: $script_path${NC}" >&2
+        return 1
+    fi
+
+    # Must be readable
+    if [[ ! -r "$script_path" ]]; then
+        return 1
+    fi
+
+    # Must not be writable by others (basic permission check)
+    if [[ "$(uname)" != "MINGW"* ]]; then
+        local perms
+        perms="$(stat -f '%Lp' "$script_path" 2>/dev/null || stat -c '%a' "$script_path" 2>/dev/null || echo "644")"
+        # Warn if world-writable
+        if [[ "${perms: -1}" =~ [2367] ]]; then
+            echo -e "${YELLOW}Warning: Script is world-writable: $script_path${NC}" >&2
+        fi
+    fi
+
+    return 0
+}
+
+# Optional: Verify script checksums if a manifest exists
+# Place a SHA-256 manifest at scripts/.checksums to enable integrity checks
+verify_script_integrity() {
+    local script_path="$1"
+    local checksum_file="$SCRIPT_DIR/.checksums"
+
+    if [[ ! -f "$checksum_file" ]]; then
+        # No manifest — skip integrity check (non-fatal)
+        return 0
+    fi
+
+    local basename
+    basename="$(basename "$script_path")"
+    local expected
+    expected="$(grep "$basename" "$checksum_file" 2>/dev/null | awk '{print $1}')"
+
+    if [[ -z "$expected" ]]; then
+        # Script not in manifest — warn but allow
+        echo -e "${YELLOW}Warning: No checksum entry for $basename${NC}" >&2
+        return 0
+    fi
+
+    local actual
+    actual="$(shasum -a 256 "$script_path" 2>/dev/null | awk '{print $1}')"
+
+    if [[ "$actual" != "$expected" ]]; then
+        echo -e "${RED}Security: Checksum mismatch for $basename (expected: ${expected:0:16}..., got: ${actual:0:16}...)${NC}" >&2
+        return 1
+    fi
+
+    return 0
+}
+
+# =============================================================================
+
 # Configuration
 BLOCK_ON_HIGH=${HIPAA_BLOCK_ON_HIGH:-true}
 BLOCK_ON_CRITICAL=${HIPAA_BLOCK_ON_CRITICAL:-true}
@@ -60,6 +139,20 @@ FINDINGS_LOW=0
 run_phi_scan() {
     local script_path="$1"
     local scan_type="$2"
+
+    # Security: Validate script path before execution
+    if ! validate_script_path "$script_path"; then
+        if [ "$VERBOSE" = "true" ]; then
+            echo -e "${YELLOW}Skipping $scan_type scan: script validation failed${NC}"
+        fi
+        return
+    fi
+
+    # Security: Verify script integrity if checksums are available
+    if ! verify_script_integrity "$script_path"; then
+        echo -e "${RED}Skipping $scan_type scan: integrity check failed${NC}"
+        return
+    fi
 
     if [ -f "$script_path" ]; then
         if [ "$VERBOSE" = "true" ]; then

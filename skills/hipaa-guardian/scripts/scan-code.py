@@ -31,6 +31,57 @@ from typing import Optional, List, Dict
 
 
 # =============================================================================
+# Security Constants & Input Sanitization
+# =============================================================================
+
+# Maximum file size to scan (10 MB) - prevents memory exhaustion from
+# adversarial or excessively large inputs
+MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
+
+# Maximum number of findings per file to prevent output flooding
+MAX_FINDINGS_PER_FILE = 500
+
+# Maximum total findings across all files
+MAX_TOTAL_FINDINGS = 5000
+
+# Boundary markers for untrusted input processing
+BOUNDARY_BEGIN = "--- HIPAA_GUARDIAN_SCAN_BEGIN ---"
+BOUNDARY_END = "--- HIPAA_GUARDIAN_SCAN_END ---"
+
+# Characters that could be used for prompt injection
+UNSAFE_OUTPUT_CHARS = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
+
+
+def sanitize_path(path: str) -> str:
+    """Sanitize file path to prevent path traversal and injection."""
+    cleaned = UNSAFE_OUTPUT_CHARS.sub('', path)
+    return str(Path(cleaned).resolve())
+
+
+def sanitize_output_string(value: str, max_length: int = 1000) -> str:
+    """Sanitize a string before including it in scan output."""
+    cleaned = UNSAFE_OUTPUT_CHARS.sub('', value)
+    if len(cleaned) > max_length:
+        cleaned = cleaned[:max_length] + '...[truncated]'
+    return cleaned
+
+
+def is_safe_file(file_path: Path) -> bool:
+    """Check if a file is safe to scan (size limits, regular file, etc.)."""
+    try:
+        if not file_path.is_file():
+            return False
+        resolved = file_path.resolve()
+        if not resolved.is_file():
+            return False
+        if resolved.stat().st_size > MAX_FILE_SIZE_BYTES:
+            return False
+        return True
+    except (OSError, ValueError):
+        return False
+
+
+# =============================================================================
 # Code-Specific Detection Patterns
 # =============================================================================
 
@@ -241,14 +292,18 @@ def hash_value(value: str) -> str:
 
 
 def redact_context(context: str) -> str:
-    """Redact PHI values in context string."""
+    """Redact PHI values in context string.
+
+    Output is sanitized to strip control characters that could be used for
+    injection when results are consumed by LLMs or other agents.
+    """
     # Redact SSN
     context = re.sub(r'\b\d{3}-\d{2}-\d{4}\b', '[REDACTED-SSN]', context)
     # Redact phone
     context = re.sub(r'\b\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b', '[REDACTED-PHONE]', context)
     # Redact email (simple)
     context = re.sub(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b', '[REDACTED-EMAIL]', context)
-    return context
+    return sanitize_output_string(context)
 
 
 def get_line_context(content: str, match_start: int, max_length: int = 100) -> tuple:
@@ -332,16 +387,24 @@ def calculate_risk(finding_type: str, language: str, pattern_name: str) -> int:
 
 
 def scan_file_for_code_phi(file_path: Path, finding_counter: List[int]) -> List[CodeFinding]:
-    """Scan a source code file for PHI."""
+    """Scan a source code file for PHI.
+
+    Includes input validation and size checks to guard against adversarial
+    or oversized inputs (Indirect Prompt Injection mitigation).
+    """
     findings = []
     language = get_language(str(file_path))
 
     if language == 'unknown':
         return findings
 
+    # Validate file safety before reading
+    if not is_safe_file(file_path):
+        return findings
+
     try:
         content = file_path.read_text(encoding='utf-8', errors='ignore')
-    except Exception:
+    except (OSError, UnicodeDecodeError, ValueError):
         return findings
 
     config = CODE_PATTERNS.get(language, {})
@@ -560,6 +623,10 @@ def main():
     result.scan_timestamp = start_time.isoformat() + 'Z'
     finding_counter = [0]
 
+    # Sanitize and validate input path
+    sanitized_path = sanitize_path(str(path))
+    path = Path(sanitized_path)
+
     if not path.exists():
         print(f"Error: Path does not exist: {path}", file=sys.stderr)
         sys.exit(1)
@@ -571,11 +638,18 @@ def main():
     if args.verbose:
         print(f"Scanning {len(files)} code files...", file=sys.stderr)
 
-    # Scan files
+    # Scan files with total findings limit to prevent output flooding
+    total_findings_count = 0
     for file_path in files:
+        if total_findings_count >= MAX_TOTAL_FINDINGS:
+            if args.verbose:
+                print(f"Warning: Reached maximum findings limit ({MAX_TOTAL_FINDINGS}). "
+                      "Stopping scan.", file=sys.stderr)
+            break
         findings = scan_file_for_code_phi(file_path, finding_counter)
-        for f in findings:
+        for f in findings[:MAX_FINDINGS_PER_FILE]:
             result.add_finding(f)
+            total_findings_count += 1
 
     # Check security controls
     result.security_controls = check_security_controls(path)
@@ -589,13 +663,16 @@ def main():
     else:
         output = output_markdown(result)
 
-    # Write output
+    # Write output with boundary markers so downstream consumers (including
+    # LLMs) can distinguish tool output from ingested file content
     if args.output:
         Path(args.output).write_text(output)
         if args.verbose:
             print(f"Results written to {args.output}", file=sys.stderr)
     else:
+        print(BOUNDARY_BEGIN)
         print(output)
+        print(BOUNDARY_END)
 
     # Exit code based on findings
     if any(f.severity == 'critical' for f in result.findings):

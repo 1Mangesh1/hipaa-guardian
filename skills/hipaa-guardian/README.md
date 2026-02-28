@@ -9,6 +9,11 @@ HIPAA compliance skill for AI coding agents. Detects PHI/PII, maps to regulation
 npx skills add 1Mangesh1/hipaa-guardian
 ```
 
+> **Verification:** Before installing, review the source at
+> [github.com/1Mangesh1/hipaa-guardian](https://github.com/1Mangesh1/hipaa-guardian).
+> You can also verify the package integrity after install — see [SECURITY.md](SECURITY.md)
+> for checksum verification instructions and the project's trust model.
+
 ## Capabilities
 
 - **PHI Detection** - All 18 HIPAA Safe Harbor identifiers
@@ -40,3 +45,11 @@ npx skills add 1Mangesh1/hipaa-guardian
 ## License
 
 MIT
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for:
+- Vulnerability reporting process
+- Trust model and verification
+- Input sanitization documentation
+- Script integrity checking
