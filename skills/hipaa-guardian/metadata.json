@@ -1,7 +1,7 @@
 {
-  "version": "1.2.0",
+  "version": "1.2.1",
   "organization": "1mangesh1",
-  "date": "February 2026",
+  "date": "June 2026",
   "abstract": "Comprehensive HIPAA compliance skill for AI agents with developer code security patterns and healthcare data format support. Detects all 18 HIPAA Safe Harbor identifiers in data files, source code, FHIR resources, HL7 messages, and CDA documents. Features include: PHI detection in data/code, authentication gate scanning, log safety audits, API response exposure checks, risk scoring (0-100), HIPAA rule mapping, audit report generation, remediation guidance, and CI/CD integration via pre-commit hooks.",
   "features": [
     "PHI/PII Detection (18 HIPAA Safe Harbor identifiers)",

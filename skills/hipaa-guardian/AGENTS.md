@@ -1,8 +1,8 @@
 # HIPAA Guardian
 
-**Version 1.2.0**
+**Version 1.2.1**
 1mangesh1
-February 2026
+June 2026
 
 > **Note:**
 > This document is for AI agents and LLMs to follow when scanning for PHI/PII,

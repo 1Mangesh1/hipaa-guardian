@@ -4,7 +4,7 @@ description: This skill should be used when the user asks to "scan for PHI", "de
 license: MIT
 metadata:
   author: 1mangesh1
-  version: "1.2.0"
+  version: "1.2.1"
   tags:
     - hipaa
     - phi

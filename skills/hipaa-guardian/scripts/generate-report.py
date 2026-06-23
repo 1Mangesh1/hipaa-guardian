@@ -244,7 +244,7 @@ def generate_markdown_report(data: Dict, title: str, org: str) -> str:
         f'# {title}\n',
         f'**Organization:** {org}',
         f'**Generated:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}',
-        f'**Scanner Version:** HIPAA Guardian v1.0.0\n',
+        f'**Scanner Version:** HIPAA Guardian v1.2.1\n',
         '---\n',
     ]
 

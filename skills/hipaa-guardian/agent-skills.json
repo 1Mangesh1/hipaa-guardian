@@ -1,6 +1,6 @@
 {
   "name": "hipaa-guardian",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "HIPAA compliance skill for PHI/PII detection, code scanning, healthcare format support (FHIR/HL7/CDA), auth gate detection, log safety audits, and CI/CD integration. Detects all 18 HIPAA Safe Harbor identifiers.",
   "author": {
     "name": "1mangesh1",

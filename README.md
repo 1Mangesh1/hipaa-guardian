@@ -46,7 +46,7 @@ Once installed, the skill activates when you ask Claude (or another agent) to sc
 
 | Skill | What it does | Ships scripts? | Version |
 |-------|--------------|----------------|---------|
-| [hipaa-guardian](./skills/hipaa-guardian/) | PHI/PII detection, code/log/auth/response scanning, risk scoring, audit reports | Yes (8 scripts) | 1.2.0 |
+| [hipaa-guardian](./skills/hipaa-guardian/) | PHI/PII detection, code/log/auth/response scanning, risk scoring, audit reports | Yes (8 scripts) | 1.2.1 |
 | [fhir-hl7-validator](./skills/fhir-hl7-validator/) | FHIR R5 and HL7 v2 structure/PHI review | No, instruction-based | 1.0.0 |
 | [healthcare-audit-logger](./skills/healthcare-audit-logger/) | HIPAA-compliant audit-trail entry design | No, instruction-based | 1.0.0 |
 
