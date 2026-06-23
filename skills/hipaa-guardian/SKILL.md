@@ -39,29 +39,35 @@ A comprehensive PHI/PII detection and HIPAA compliance skill for AI agents, with
 
 ## Usage
 
-```
-/hipaa-guardian [command] [path] [options]
-```
+This skill activates from natural-language requests ("scan this repo for PHI",
+"check our logs for patient data", "audit for HIPAA compliance"). Map the
+request to the script that handles it and run it directly. There is no single
+`hipaa-guardian` dispatcher; each task is its own script.
 
-### Commands
+| Task | Script |
+|------|--------|
+| Scan data files for PHI/PII | `scripts/detect-phi.py <path>` |
+| Scan source code for PHI leakage | `scripts/scan-code.py <path>` |
+| Find PHI endpoints with no auth gate | `scripts/scan-auth.py <path>` |
+| Find PHI in log statements | `scripts/scan-logs.py <path>` |
+| Find unmasked PHI in API responses | `scripts/scan-response.py <path>` |
+| Build an audit report from findings | `scripts/generate-report.py <findings.json>` |
+| Check project security controls | `scripts/validate-controls.sh <path>` |
 
-- `scan <path>` - Scan files or directories for PHI/PII
-- `scan-code <path>` - Scan source code for PHI leakage
-- `scan-auth <path>` - Check API endpoints for missing authentication before PHI access
-- `scan-logs <path>` - Detect PHI patterns in logging statements
-- `scan-response <path>` - Check API responses for unmasked PHI exposure
-- `audit <path>` - Generate full HIPAA compliance audit report
-- `controls <path>` - Check security controls in a project
-- `report` - Generate report from existing findings
+Each script writes to stdout (or a file with `-o`) and exits `0` (clean),
+`1` (high findings), or `2` (critical findings), so CI can gate on the exit code.
 
-### Options
+### Options (detect-phi.py)
 
-- `--format <type>` - Output format: json, markdown, csv (default: markdown)
-- `--output <file>` - Write results to file
-- `--severity <level>` - Minimum severity: low, medium, high, critical
-- `--include <patterns>` - File patterns to include
-- `--exclude <patterns>` - File patterns to exclude
-- `--synthetic` - Treat all data as synthetic (default for safety)
+- `-f, --format <json|markdown|csv>` - Output format (default: markdown)
+- `-o, --output <file>` - Write results to a file
+- `-s, --severity <low|medium|high|critical>` - Minimum severity to report
+- `--include <patterns>` / `--exclude <patterns>` - File patterns to scan
+- `--synthetic` - Mark all findings as synthetic/test data
+- `-v, --verbose` - Verbose output
+
+`scan-code.py`, `scan-auth.py`, `scan-logs.py`, and `scan-response.py` take
+`<path>` plus `-f/--format` (json or markdown), `-o/--output`, and `-v/--verbose`.
 
 ## Workflow
 
@@ -121,12 +127,14 @@ Classify each finding:
 
 ### Step 5: Risk Scoring
 
-Calculate risk score (0-100) using methodology from `references/risk-scoring.md`:
+The scanners score each finding `risk = min(100, sensitivity × confidence)`,
+where sensitivity is the identifier's base weight (an SSN outweighs a ZIP) and
+confidence is how strongly the value matched its pattern. Scores map to severity:
+90+ critical, 70+ high, 50+ medium, 25+ low, otherwise informational.
 
-```
-Risk Score = (Sensitivity × 0.35) + (Exposure × 0.25) +
-             (Volume × 0.20) + (Identifiability × 0.20)
-```
+`references/risk-scoring.md` documents a fuller multi-factor model (sensitivity,
+exposure, volume, identifiability) for scoring a finding by hand or justifying a
+rating in a report. The scanner uses the simpler proxy above.
 
 ### Step 6: HIPAA Mapping
 

@@ -50,13 +50,18 @@ checksum before execution and refuse to run scripts that have been tampered with
 ### Indirect Prompt Injection Mitigation
 
 This skill processes untrusted inputs (source code, data files, logs, healthcare
-formats). The following safeguards are implemented to mitigate Indirect Prompt
-Injection (Category 8) risks:
+formats). The following safeguards mitigate Indirect Prompt Injection (Category 8)
+risks.
+
+Scope: these input-hardening controls live in the two file-content scanners,
+`detect-phi.py` and `scan-code.py`. The pattern scanners that read the same source
+tree (`scan-auth.py`, `scan-logs.py`, `scan-response.py`) do not yet enforce the
+size and finding caps below; run them on trusted checkouts.
 
 #### File Size Limits
-All scanner scripts enforce a **10 MB maximum file size** (`MAX_FILE_SIZE_BYTES`).
-Files exceeding this limit are silently skipped to prevent memory exhaustion and
-output flooding attacks.
+`detect-phi.py` and `scan-code.py` enforce a **10 MB maximum file size**
+(`MAX_FILE_SIZE_BYTES`). Files over the limit are skipped to prevent memory
+exhaustion and output flooding.
 
 #### Finding Limits
 - **Per-file limit:** 500 findings maximum (`MAX_FINDINGS_PER_FILE`)
@@ -66,7 +71,7 @@ These caps prevent adversarial inputs from generating excessive output that coul
 overwhelm downstream consumers (including LLMs).
 
 #### Output Boundary Markers
-All scanner scripts wrap their stdout output in boundary markers:
+`detect-phi.py` and `scan-code.py` wrap their stdout output in boundary markers:
 
 ```
 --- HIPAA_GUARDIAN_SCAN_BEGIN ---
