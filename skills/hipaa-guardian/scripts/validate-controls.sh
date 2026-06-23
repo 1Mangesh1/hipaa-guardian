@@ -32,20 +32,23 @@ PASS=0
 WARN=0
 FAIL=0
 
-# Output functions
+# Output functions.
+# Counters use $((x + 1)) rather than ((x++)): under `set -e`, the postfix
+# form returns the pre-increment value, so the first call (var still 0) exits
+# non-zero and aborts the whole script.
 pass() {
-    echo -e "${GREEN}✓${NC} $1"
-    ((PASS++))
+    echo -e "${GREEN}[PASS]${NC} $1"
+    PASS=$((PASS + 1))
 }
 
 warn() {
-    echo -e "${YELLOW}⚠${NC} $1"
-    ((WARN++))
+    echo -e "${YELLOW}[WARN]${NC} $1"
+    WARN=$((WARN + 1))
 }
 
 fail() {
-    echo -e "${RED}✗${NC} $1"
-    ((FAIL++))
+    echo -e "${RED}[FAIL]${NC} $1"
+    FAIL=$((FAIL + 1))
 }
 
 info() {
@@ -243,7 +246,7 @@ check_secrets_in_code() {
             2>/dev/null | head -5 || true)
 
         if [[ -n "$matches" ]]; then
-            ((found_secrets++))
+            found_secrets=$((found_secrets + 1))
             warn "Potential hardcoded secret pattern found"
             echo "$matches" | while read -r line; do
                 info "  $line"

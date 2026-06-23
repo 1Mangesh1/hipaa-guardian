@@ -107,14 +107,14 @@ SCAN_DATA=${HIPAA_SCAN_DATA:-true}
 SCAN_CODE=${HIPAA_SCAN_CODE:-true}
 VERBOSE=${HIPAA_VERBOSE:-false}
 
-echo "🔍 HIPAA Guardian Pre-Commit Scan"
-echo "================================="
+echo "HIPAA Guardian Pre-Commit Scan"
+echo "=============================="
 
 # Get list of staged files
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
 
 if [ -z "$STAGED_FILES" ]; then
-    echo -e "${GREEN}✓ No files staged for commit${NC}"
+    echo -e "${GREEN}No files staged for commit${NC}"
     exit 0
 fi
 
@@ -122,13 +122,17 @@ fi
 TEMP_DIR=$(mktemp -d)
 trap "rm -rf $TEMP_DIR" EXIT
 
-# Copy staged files to temp directory
-for file in $STAGED_FILES; do
+# Copy staged files to temp directory. Read line by line rather than
+# `for file in $STAGED_FILES`: the unquoted-expansion form word-splits on
+# spaces, so a staged path like "patient data.json" would be skipped entirely
+# and its PHI would slip past the gate.
+while IFS= read -r file; do
+    [ -n "$file" ] || continue
     if [ -f "$file" ]; then
         mkdir -p "$TEMP_DIR/$(dirname "$file")"
         git show ":$file" > "$TEMP_DIR/$file" 2>/dev/null || true
     fi
-done
+done <<< "$STAGED_FILES"
 
 FINDINGS_CRITICAL=0
 FINDINGS_HIGH=0
@@ -159,7 +163,16 @@ run_phi_scan() {
             echo "Running $scan_type scan..."
         fi
 
-        output=$(python3 "$script_path" "$TEMP_DIR" --format json 2>/dev/null) || true
+        # The scanner exits 1/2 to signal high/critical findings, so a non-zero
+        # status is normal and `|| true` keeps the hook alive. But we must not
+        # silently swallow an actual crash: capture stderr and surface it so a
+        # broken scanner can't masquerade as a clean scan and wave PHI through.
+        local err_file="$TEMP_DIR/.scan_stderr"
+        output=$(python3 "$script_path" "$TEMP_DIR" --format json 2>"$err_file") || true
+        if [ -s "$err_file" ]; then
+            echo -e "${YELLOW}Warning: $scan_type scanner reported errors (results may be incomplete):${NC}" >&2
+            cat "$err_file" >&2
+        fi
 
         if [ -n "$output" ]; then
             # Parse findings count from JSON
@@ -240,14 +253,14 @@ fi
 TOTAL=$((FINDINGS_CRITICAL + FINDINGS_HIGH + FINDINGS_MEDIUM + FINDINGS_LOW))
 
 if [ $TOTAL -eq 0 ]; then
-    echo -e "${GREEN}✓ No PHI/PII detected in staged files${NC}"
+    echo -e "${GREEN}No PHI/PII detected in staged files${NC}"
     exit 0
 fi
 
 # Determine if commit should be blocked
 if [ "$BLOCK_ON_CRITICAL" = "true" ] && [ $FINDINGS_CRITICAL -gt 0 ]; then
     echo ""
-    echo -e "${RED}❌ COMMIT BLOCKED: Critical PHI findings detected${NC}"
+    echo -e "${RED}COMMIT BLOCKED: Critical PHI findings detected${NC}"
     echo ""
     echo "To bypass this check (NOT RECOMMENDED for production):"
     echo "  git commit --no-verify"
@@ -259,7 +272,7 @@ fi
 
 if [ "$BLOCK_ON_HIGH" = "true" ] && [ $FINDINGS_HIGH -gt 0 ]; then
     echo ""
-    echo -e "${RED}❌ COMMIT BLOCKED: High severity PHI findings detected${NC}"
+    echo -e "${RED}COMMIT BLOCKED: High severity PHI findings detected${NC}"
     echo ""
     echo "To bypass this check (NOT RECOMMENDED):"
     echo "  git commit --no-verify"
@@ -268,6 +281,6 @@ fi
 
 # Warnings only
 echo ""
-echo -e "${YELLOW}⚠️  PHI/PII findings detected but commit allowed${NC}"
+echo -e "${YELLOW}PHI/PII findings detected but commit allowed${NC}"
 echo "Please review and remediate these findings."
 exit 0

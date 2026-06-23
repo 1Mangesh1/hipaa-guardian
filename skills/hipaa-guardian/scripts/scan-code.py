@@ -179,8 +179,8 @@ class CodeFinding:
     value_hash: str
     context: str
     risk_score: int
-    severity: str
     is_test_file: bool
+    severity: str = ''  # derived in __post_init__ from risk_score
     remediation: List[str] = field(default_factory=list)
     status: str = 'open'
 
@@ -410,71 +410,32 @@ def scan_file_for_code_phi(file_path: Path, finding_counter: List[int]) -> List[
     config = CODE_PATTERNS.get(language, {})
     is_test = is_test_file(str(file_path))
 
-    # Scan string patterns
-    for pattern, pattern_name in config.get('string_patterns', []):
-        for match in re.finditer(pattern, content, re.IGNORECASE | re.MULTILINE):
-            line_num, column, context = get_line_context(content, match.start())
-            finding_counter[0] += 1
-
-            finding = CodeFinding(
-                id=f"CF-{datetime.now().strftime('%Y%m%d')}-{finding_counter[0]:04d}",
-                timestamp=datetime.now().isoformat() + 'Z',
-                file=str(file_path),
-                line=line_num,
-                column=column,
-                finding_type='string_literal',
-                pattern_name=pattern_name,
-                language=language,
-                value_hash=hash_value(match.group()),
-                context=context,
-                risk_score=calculate_risk('string_literal', language, pattern_name),
-                is_test_file=is_test,
-            )
-            findings.append(finding)
-
-    # Scan comment patterns
-    for pattern, pattern_name in config.get('comment_patterns', []):
-        for match in re.finditer(pattern, content, re.IGNORECASE | re.MULTILINE):
-            line_num, column, context = get_line_context(content, match.start())
-            finding_counter[0] += 1
-
-            finding = CodeFinding(
-                id=f"CF-{datetime.now().strftime('%Y%m%d')}-{finding_counter[0]:04d}",
-                timestamp=datetime.now().isoformat() + 'Z',
-                file=str(file_path),
-                line=line_num,
-                column=column,
-                finding_type='comment',
-                pattern_name=pattern_name,
-                language=language,
-                value_hash=hash_value(match.group()),
-                context=context,
-                risk_score=calculate_risk('comment', language, pattern_name),
-                is_test_file=is_test,
-            )
-            findings.append(finding)
-
-    # Scan fixture patterns
-    for pattern, pattern_name in config.get('fixture_patterns', []):
-        for match in re.finditer(pattern, content, re.IGNORECASE | re.MULTILINE):
-            line_num, column, context = get_line_context(content, match.start())
-            finding_counter[0] += 1
-
-            finding = CodeFinding(
-                id=f"CF-{datetime.now().strftime('%Y%m%d')}-{finding_counter[0]:04d}",
-                timestamp=datetime.now().isoformat() + 'Z',
-                file=str(file_path),
-                line=line_num,
-                column=column,
-                finding_type='fixture',
-                pattern_name=pattern_name,
-                language=language,
-                value_hash=hash_value(match.group()),
-                context=context,
-                risk_score=calculate_risk('fixture', language, pattern_name),
-                is_test_file=is_test,
-            )
-            findings.append(finding)
+    # Each pattern bucket maps to one finding_type; construction is otherwise
+    # identical, so iterate over (config key, finding_type) pairs.
+    pattern_buckets = [
+        ('string_patterns', 'string_literal'),
+        ('comment_patterns', 'comment'),
+        ('fixture_patterns', 'fixture'),
+    ]
+    for config_key, finding_type in pattern_buckets:
+        for pattern, pattern_name in config.get(config_key, []):
+            for match in re.finditer(pattern, content, re.IGNORECASE | re.MULTILINE):
+                line_num, column, context = get_line_context(content, match.start())
+                finding_counter[0] += 1
+                findings.append(CodeFinding(
+                    id=f"CF-{datetime.now().strftime('%Y%m%d')}-{finding_counter[0]:04d}",
+                    timestamp=datetime.now().isoformat() + 'Z',
+                    file=str(file_path),
+                    line=line_num,
+                    column=column,
+                    finding_type=finding_type,
+                    pattern_name=pattern_name,
+                    language=language,
+                    value_hash=hash_value(match.group()),
+                    context=context,
+                    risk_score=calculate_risk(finding_type, language, pattern_name),
+                    is_test_file=is_test,
+                ))
 
     return findings
 
@@ -569,17 +530,17 @@ def output_markdown(result: CodeScanResult) -> str:
     controls = result.security_controls
 
     if controls.get('gitignore', {}).get('present'):
-        status = '✓' if controls['gitignore'].get('complete') else '⚠️'
-        lines.append(f'- {status} `.gitignore` present')
+        status = 'OK' if controls['gitignore'].get('complete') else 'PARTIAL'
+        lines.append(f'- [{status}] `.gitignore` present')
         if controls['gitignore'].get('missing'):
             lines.append(f'  - Missing: {", ".join(controls["gitignore"]["missing"])}')
     else:
-        lines.append('- ✗ `.gitignore` not found')
+        lines.append('- [MISSING] `.gitignore` not found')
 
     if controls.get('precommit', {}).get('present'):
-        lines.append('- ✓ Pre-commit config present')
+        lines.append('- [OK] Pre-commit config present')
     else:
-        lines.append('- ✗ No pre-commit hooks configured')
+        lines.append('- [MISSING] No pre-commit hooks configured')
 
     lines.append('\n## Findings\n')
 

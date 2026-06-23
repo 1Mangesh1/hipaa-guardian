@@ -15,6 +15,7 @@ Options:
 """
 
 import argparse
+import html
 import json
 import sys
 from datetime import datetime
@@ -26,6 +27,15 @@ def load_findings(path: str) -> Dict:
     """Load findings from JSON file."""
     with open(path) as f:
         return json.load(f)
+
+
+def get_severity(finding: Dict) -> str:
+    """Per-finding severity, tolerating both schemas this tool consumes:
+    detect-phi.py emits a top-level `severity`; the canonical finding schema
+    (examples/sample-finding.json) nests it under `risk_assessment.severity`."""
+    return (finding.get('severity')
+            or finding.get('risk_assessment', {}).get('severity')
+            or 'medium')
 
 
 def generate_executive_summary(data: Dict) -> List[str]:
@@ -42,20 +52,16 @@ def generate_executive_summary(data: Dict) -> List[str]:
     # Determine overall status
     if critical > 0:
         status = 'CRITICAL - Immediate Action Required'
-        status_emoji = '🔴'
     elif high > 0:
         status = 'AT RISK - Prompt Remediation Needed'
-        status_emoji = '🟠'
     elif total > 0:
         status = 'NEEDS ATTENTION - Review Recommended'
-        status_emoji = '🟡'
     else:
         status = 'COMPLIANT - No PHI Detected'
-        status_emoji = '🟢'
 
     lines = [
         '## Executive Summary\n',
-        f'**Overall Status:** {status_emoji} {status}\n',
+        f'**Overall Status:** {status}\n',
         f'This audit identified **{total} findings** requiring review.\n',
         '### Risk Overview\n',
         '| Severity | Count | Action Required |',
@@ -79,7 +85,7 @@ def generate_findings_section(findings: List[Dict]) -> List[str]:
     severity_order = ['critical', 'high', 'medium', 'low', 'informational']
 
     for severity in severity_order:
-        severity_findings = [f for f in findings if f.get('severity') == severity]
+        severity_findings = [f for f in findings if get_severity(f) == severity]
         if not severity_findings:
             continue
 
@@ -153,11 +159,11 @@ def generate_compliance_section(data: Dict) -> List[str]:
     ]
 
     if has_phi:
-        lines.append('| PHI Protection | ⚠️ Needs Review | Unprotected PHI detected |')
-        lines.append('| De-identification | ❌ Failed | PHI identifiers present |')
+        lines.append('| PHI Protection | REVIEW | Unprotected PHI detected |')
+        lines.append('| De-identification | FAIL | PHI identifiers present |')
     else:
-        lines.append('| PHI Protection | ✓ Pass | No unprotected PHI detected |')
-        lines.append('| De-identification | ✓ Pass | Data appears de-identified |')
+        lines.append('| PHI Protection | PASS | No unprotected PHI detected |')
+        lines.append('| De-identification | PASS | Data appears de-identified |')
 
     lines.extend([
         '',
@@ -167,14 +173,14 @@ def generate_compliance_section(data: Dict) -> List[str]:
     ])
 
     if has_access_control_issues:
-        lines.append('| Access Control | ⚠️ Review | Access control improvements recommended |')
+        lines.append('| Access Control | REVIEW | Access control improvements recommended |')
     else:
-        lines.append('| Access Control | ✓ Pass | No access control issues detected |')
+        lines.append('| Access Control | PASS | No access control issues detected |')
 
     if has_unencrypted:
-        lines.append('| Encryption | ❌ Failed | Unencrypted PHI detected |')
+        lines.append('| Encryption | FAIL | Unencrypted PHI detected |')
     else:
-        lines.append('| Encryption | ✓ Pass | No unencrypted PHI detected |')
+        lines.append('| Encryption | PASS | No unencrypted PHI detected |')
 
     lines.append('')
     return lines
@@ -193,7 +199,7 @@ def generate_playbook_section(findings: List[Dict]) -> List[str]:
     medium_actions = []
 
     for finding in findings:
-        severity = finding.get('severity', 'medium')
+        severity = get_severity(finding)
         finding_id = finding.get('id', 'Unknown')
         file_path = finding.get('file', 'Unknown')
 
@@ -280,16 +286,30 @@ def main():
         print(f"Error: Invalid JSON in findings file: {e}", file=sys.stderr)
         sys.exit(1)
 
+    # Guard against pointing this at a raw data file by mistake: a real
+    # findings file always carries a `findings` and/or `summary` key. Without
+    # this, an unrelated JSON silently yields a "COMPLIANT - No PHI" report.
+    if not isinstance(data, dict) or ('findings' not in data and 'summary' not in data):
+        print(f"Error: {args.findings} is not a findings file "
+              "(expected a `findings` or `summary` key). "
+              "Generate one with detect-phi.py or scan-code.py first.",
+              file=sys.stderr)
+        sys.exit(1)
+
     # Generate report
     if args.format == 'markdown':
         report = generate_markdown_report(data, args.title, args.org)
     else:
-        # HTML format - wrap markdown in basic HTML
-        md_content = generate_markdown_report(data, args.title, args.org)
+        # HTML format - wrap markdown in basic HTML. The body renders as
+        # preformatted text, so everything that flows in from findings or CLI
+        # args (file paths, contexts, title) is HTML-escaped to avoid injecting
+        # markup into the report.
+        md_content = html.escape(generate_markdown_report(data, args.title, args.org))
+        safe_title = html.escape(args.title)
         report = f'''<!DOCTYPE html>
 <html>
 <head>
-    <title>{args.title}</title>
+    <title>{safe_title}</title>
     <style>
         body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; }}
         table {{ border-collapse: collapse; width: 100%; margin: 1em 0; }}

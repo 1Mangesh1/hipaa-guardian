@@ -221,16 +221,19 @@ def get_language(file_path: Path) -> str:
 
 
 def has_masking(content: str, start: int, end: int) -> bool:
-    """Check if response has masking applied."""
-    # Check a window around the response
-    window_start = max(0, start - 200)
-    window_end = min(len(content), end + 100)
-    window = content[window_start:window_end]
+    """Check if masking is applied to the PHI before this response serializes it.
 
-    for pattern in MASKING_PATTERNS:
-        if re.search(pattern, window, re.I):
-            return True
-    return False
+    Only look at code up to the end of the response expression, not after it:
+    masking that appears *after* the response is emitted cannot sanitize it, and
+    an unrelated later mask_phi()/sanitize() call was suppressing real leaks. We
+    keep a 200-char lookbehind to catch a value masked just above the response.
+
+    ponytail: proximity heuristic, not data-flow. A mask on a different variable
+    within the lookbehind can still hide a leak; replace with AST taint tracking
+    if false negatives matter.
+    """
+    window = content[max(0, start - 200):end]
+    return any(re.search(pattern, window, re.I) for pattern in MASKING_PATTERNS)
 
 
 def find_phi_fields(content: str, phi_patterns: List[str]) -> List[str]:
